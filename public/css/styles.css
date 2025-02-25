@@ -492,8 +492,133 @@ nav ul li a:hover {
   color: #2ecc71;
 }
 
+/* Đọc sách */
+.reading-container {
+  max-width: 850px;
+  margin: auto;
+  padding: 25px;
+  background: #fff;
+  box-shadow: 0px 5px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
 
+.reading-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
 
+.chapter-content {
+  font-size: 18px;
+  line-height: 1.8;
+  text-align: justify;
+  color: #333;
+  margin-bottom: 25px;
+}
 
+/* Điều hướng chương */
+.chapter-navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 25px;
+}
 
+.chapter-navigation .btn {
+  text-decoration: none;
+  padding: 12px 18px;
+  background: #007bff;
+  color: white;
+  border-radius: 6px;
+  transition: background 0.3s ease-in-out;
+  font-weight: bold;
+}
 
+.chapter-navigation .btn:hover {
+  background: #0056b3;
+}
+
+/* Danh sách chương */
+.chapter-list {
+  margin-top: 30px;
+}
+
+.chapter-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.chapter-list li {
+  margin: 6px 0;
+}
+
+.chapter-list a {
+  text-decoration: none;
+  color: #007bff;
+  font-weight: 500;
+}
+
+.chapter-list .active {
+  font-weight: bold;
+  color: red;
+}
+
+/* Giao diện danh sách chương dạng lưới */
+.chapter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 15px;
+  max-height: 350px; /* Giới hạn chiều cao */
+  overflow-y: auto; /* Thanh cuộn nếu có quá nhiều chương */
+  padding: 12px;
+  border-radius: 12px;
+  background: #f9f9f9;
+}
+
+/* Card chương */
+.chapter-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12);
+  text-align: center;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  text-decoration: none;
+  color: #333;
+}
+
+.chapter-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  background: #ececec;
+}
+
+/* Số chương */
+.chapter-number {
+  font-weight: bold;
+  color: #007bff;
+}
+
+/* Tiêu đề chương */
+.chapter-title {
+  font-size: 15px;
+  color: #444;
+  margin-top: 4px;
+}
+
+/* Dropdown chọn chương */
+select {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  background: #fff;
+  transition: border 0.3s ease-in-out;
+}
+
+select:hover {
+  border: 1px solid #007bff;
+}

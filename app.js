@@ -13,7 +13,7 @@ const router = express.Router();
 app.use(express.static("public"));
 
 // Định nghĩa route API
-app.use('/api', bookRoutes);
+app.use("/", bookRoutes);
 
 
 // Cấu hình EJS
@@ -146,7 +146,7 @@ app.post("/delete-book/:id", async (req, res) => {
 });
 
 // 👉 Khởi động server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`🚀 Server chạy tại http://localhost:${PORT}`);
 });
