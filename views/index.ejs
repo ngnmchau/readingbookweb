@@ -1,34 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reading Book Web</title>
-  <link rel="stylesheet" href="/css/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="BookVerse - Khám phá, đọc và chia sẻ sách yêu thích của bạn.">
+    <meta name="keywords" content="BookVerse, sách, đọc sách, chia sẻ sách, khám phá sách, tác giả, thể loại sách">
+    <meta name="author" content="BookVerse Team">
+    <title>BookVerse - Khám phá thế giới qua từng trang sách</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
-  <header>
-    <h1>Welcome to Reading Book Web</h1>
-    <nav>
-      <a href="/">Home</a>
-    </nav>
-  </header>
+    <!-- Header -->
+    <%- include('partials/header') %>
 
-  <main>
-    <h2>Library</h2>
-    <div class="book-list">
-      <% books.forEach(book => { %>
-        <div class="book">
-          <h3><%= book.title %></h3>
-          <p><strong>Author:</strong> <%= book.author %></p>
-          <a href="/book/<%= book.id %>">Read more</a>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>📖 Chào mừng đến với <span class="highlight">BookVerse</span></h1>
+            <p>Khám phá, đọc và chia sẻ những quyển sách bạn yêu thích</p>
+            <form action="/search" method="GET" class="search-form">
+                <input type="text" name="q" placeholder="🔍 Nhập tên sách hoặc tác giả..." aria-label="Tìm kiếm sách">
+                <button type="submit"><i class="fas fa-search"></i> Tìm kiếm</button>
+            </form>
         </div>
-      <% }); %>
-    </div>
-  </main>
+    </section>
 
-  <footer>
-    <p>&copy; 2024 Reading Book Web</p>
-  </footer>
+    <!-- Featured Books Section -->
+    <section class="featured-books">
+        <div class="container">
+            <h2>📚 Sách nổi bật</h2>
+            <% if (books.length > 0) { %>
+                <div class="book-grid">
+                    <% books.forEach(book => { %>
+                        <div class="book-card">
+                            <img src="<%= book.cover %>" alt="Bìa sách: <%= book.title %>">
+                            <div class="book-info">
+                                <h3><%= book.title %></h3>
+                                <p><strong>Tác giả:</strong> <%= book.author %></p>
+                                <a href="/book/<%= book._id %>" class="btn"><i class="fas fa-book-open"></i> Xem chi tiết</a>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            <% } else { %>
+                <p>Không có sách nào để hiển thị.</p>
+            <% } %>
+        </div>
+    </section>
+    
+
+    <!-- Categories Section -->
+    <section class="categories">
+        <div class="container">
+            <h2>🎭 Khám phá theo thể loại</h2>
+            <div class="category-grid">
+                <% const categories = ['Văn học', 'Kinh tế', 'Tâm lý học', 'Khoa học', 'Lịch sử', 'Nghệ thuật']; %>
+                <% categories.forEach(category => { %>
+                    <a href="/category/<%= encodeURIComponent(category) %>" class="category-card"><%= category %></a>
+                <% }); %>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <%- include('partials/footer') %>
+
+    <script src="/js/scripts.js"></script>
 </body>
-</html>
