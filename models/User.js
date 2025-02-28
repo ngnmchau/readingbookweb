@@ -9,6 +9,11 @@ const UserSchema = new mongoose.Schema({
     trim: true,
     maxlength: [50, 'Tên không được vượt quá 50 ký tự']
   },
+  username: {
+    type: String,
+    unique: true,
+    sparse: true // Cho phép nhiều giá trị null
+  },
   email: {
     type: String,
     required: [true, 'Vui lòng nhập email'],
