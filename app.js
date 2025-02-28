@@ -11,6 +11,7 @@ dotenv.config({ path: './config/config.env' });
 const Book = require('./models/Book');
 const Chapter = require('./models/Chapter');
 const User = require('./models/User');
+const BlogPost = require ('./models/Blog')
 
 const app = express();
 
@@ -31,12 +32,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 const authRoutes = require('./routes/auth');
 const bookRoutes = require('./routes/bookRoutes');
 const indexRoutes = require('./routes/index');
+const blogRoutes = require('./routes/blog');
 
 // Mount routers
 app.use('/auth', authRoutes);
 app.use('/api/books', bookRoutes);
 app.use('/', indexRoutes);
-
+app.use('/blog', blogRoutes);
 // API routes
 app.post('/api/books/:id/favorites', (req, res) => {
   // Xử lý thêm sách vào danh sách yêu thích
@@ -68,6 +70,41 @@ const checkAndSeedData = async () => {
     console.error('Lỗi khi kiểm tra/seed dữ liệu:', err);
   }
 };
+
+//blog
+app.get('/blog', (req, res) => {
+  res.render('blog', { posts: [] }); 
+});
+
+// Lấy bài viết theo ID
+app.get('/blog/:id', (req, res) => {
+  const post = blogPosts.find(p => p.id == req.params.id);
+  if (!post) return res.status(404).send("Bài viết không tồn tại");
+  res.render('blog_post', { post });
+});
+
+// API Like bài viết
+app.post('/blog/:id/like', (req, res) => {
+  const post = blogPosts.find(p => p.id == req.params.id);
+  if (post) {
+    post.likes++;
+    res.json({ likes: post.likes });
+  } else {
+    res.status(404).json({ message: "Bài viết không tồn tại" });
+  }
+});
+// API Bình luận bài viết
+app.post('/blog/:id/comment', (req, res) => {
+  const post = blogPosts.find(p => p.id == req.params.id);
+  if (post) {
+    post.comments.push({ author: req.body.author, text: req.body.text });
+    res.json({ comments: post.comments });
+  } else {
+    res.status(404).json({ message: "Bài viết không tồn tại" });
+  }
+});
+
+
 
 // Xử lý 404
 app.use((req, res) => {

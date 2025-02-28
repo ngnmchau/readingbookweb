@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <%- include('partials/head', { page: 'blog' }) %>
+  <title>ReadingBook - Blog</title>
+  <link rel="stylesheet" href="/css/blog.css">
+</head>
+<body>
+  <%- include('partials/navbar') %>
+
+  <!-- Tiêu đề Blog -->
+  <section class="blog-header">
+    <div class="container">
+      <h1 class="fade-in">📖 Blog ReadingBook</h1>
+      <p class="fade-in">Chia sẻ kiến thức, kinh nghiệm đọc sách và cảm nhận của độc giả</p>
+    </div>
+    <div class="wave"></div>
+  </section>
+
+  <!-- Danh sách Bài viết -->
+  <section class="blog-list">
+    <div class="container">
+      <div class="grid">
+        <!-- Lặp qua mảng posts từ backend -->
+        <% posts.forEach(post => { %>
+          <div class="blog-card">
+            <a href="/blog/<%= post._id %>">
+              <img src="<%= post.image %>" alt="<%= post.title %>" class="blog-img">
+            </a>
+            <div class="blog-info">
+              <h3><a href="/blog/<%= post._id %>"><%= post.title %></a></h3>
+              <p class="blog-meta">Bởi <%= post.author %> - <%= new Date(post.createdAt).toLocaleDateString() %></p>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+
+  <%- include('partials/footer') %>
+</body>
+</html>

@@ -341,38 +341,45 @@ ul {
 
 /* Footer */
 .footer {
-  background-color: #222;
-  color: #fff;
+  background-color: #d8a7ff; /* Màu tím nhạt */
+  color: #333; /* Màu chữ tối cho dễ đọc */
   padding: 60px 0 20px;
 }
 
-.footer-content {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 30px;
-  margin-bottom: 40px;
+.footer .container {
+  max-width: 1140px;
 }
 
-.footer-section h3 {
-  font-size: 20px;
-  margin-bottom: 20px;
-  position: relative;
-  padding-bottom: 10px;
+.footer h5 {
+  font-size: 18px;
+  color: #333; /* Màu chữ tiêu đề */
 }
 
-.footer-section h3::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 50px;
-  height: 2px;
-  background-color: #007bff;
+.footer p {
+  color: #555; /* Màu chữ mô tả */
 }
 
-.footer-section p {
-  margin-bottom: 10px;
+.footer a {
+  color: #333; /* Màu liên kết */
+  transition: color 0.3s ease;
 }
+
+.footer a:hover {
+  color: #800080; /* Màu tím khi hover */
+}
+
+/* Bản quyền */
+.footer .text-center p {
+  font-size: 0.875rem;
+  color: #6c757d; /* Màu xám cho bản quyền */
+}
+
+/* Viền của Footer */
+.footer .border-dark {
+  border-color: #333 !important;
+}
+
+
 
 .social-icons {
   display: flex;
@@ -400,7 +407,7 @@ ul {
 .footer-bottom {
   text-align: center;
   padding-top: 20px;
-  border-top: 1px solid #444;
+  border-top: 1px solid #e2e4f6;
 }
 
 /* Books Page */

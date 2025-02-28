@@ -29,8 +29,22 @@
             <li><a class="dropdown-item" href="/categories">Xem tất cả thể loại</a></li>
           </ul>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/blog">Blog</a>
+        </li>
       </ul>
-      
+      <form class="search-form" onsubmit="submitSearch(event)">
+        <div class="search-container position-relative d-flex align-items-center">
+          <input type="text" class="search-input form-control" placeholder="Tìm kiếm sách..." oninput="toggleClearButton()" />
+          <button class="clear-btn btn" onclick="clearSearch()" style="display: none;">
+            <i class="fas fa-times"></i>
+          </button>
+          <button class="search-btn btn" type="submit">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </form>
+
       <div class="d-flex align-items-center">
         <% if (locals.user) { %>
           <div class="dropdown">
@@ -54,3 +68,89 @@
     </div>
   </div>
 </nav> 
+
+
+<style>
+  .search-form {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  .search-input {
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 25px;
+    border: 1px solid #ddd;
+    width: 100%;
+    padding-right: 40px; /* Tạo không gian cho nút xóa */
+  }
+
+  .search-input:focus {
+    outline: none;
+    border-color: #8e44ad; /* Màu tím */
+    box-shadow: 0 4px 8px rgba(142, 68, 173, 0.4);
+  }
+
+  .search-btn {
+    background-color: #8e44ad; /* Màu tím */
+    color: white;
+    border-radius: 50%;
+    padding: 12px 14px;
+    margin-left: 10px; /* Khoảng cách giữa thanh tìm kiếm và nút tìm kiếm */
+    z-index: 1;
+    transition: background-color 0.3s ease;
+    border: none;
+  }
+
+  .search-btn:hover {
+    background-color: #732d91; /* Màu tím đậm khi hover */
+  }
+
+  .clear-btn {
+    background-color: transparent;
+    color: #8e44ad;
+    font-size: 20px;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    right: 10px; /* Đặt nút xóa vào vị trí bên phải của thanh tìm kiếm */
+    z-index: 2;
+  }
+
+  .clear-btn:hover {
+    color: #732d91;
+  }
+</style>
+
+<script>
+  function toggleClearButton() {
+    const searchInput = document.querySelector('.search-input');
+    const clearBtn = document.querySelector('.clear-btn');
+    
+    if (searchInput.value.trim() !== '') {
+      clearBtn.style.display = 'inline-block';
+    } else {
+      clearBtn.style.display = 'none';
+    }
+  }
+
+  function clearSearch() {
+    document.querySelector('.search-input').value = '';
+    document.querySelector('.clear-btn').style.display = 'none';
+  }
+
+  function submitSearch(event) {
+    event.preventDefault();
+    const searchInput = document.querySelector('.search-input');
+    // Handle the search action here
+    console.log('Searching for:', searchInput.value);
+  }
+</script>

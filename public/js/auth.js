@@ -90,6 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const registerForm = document.querySelector('form[action="/auth/register"]');
   if (registerForm) {
     registerForm.addEventListener('submit', function(e) {
+
       const password = passwordInput.value;
       const confirmPassword = confirmPasswordInput.value;
       
@@ -105,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return false;
       }
       
-      return true;
+      this.submit();
     });
   }
 }); 
