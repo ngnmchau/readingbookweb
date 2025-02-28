@@ -2,221 +2,875 @@
 <html lang="vi">
 <head>
   <%- include('partials/head', { page: 'home' }) %>
-  <title>ReadingBook - Nền tảng đọc sách trực tuyến</title>
-  <link rel="stylesheet" href="/css/index.css">
-
+  <title>Bookverse - Khám phá thế giới sách trực tuyến</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
+  <style>
+    :root {
+      --swiper-theme-color: var(--primary-color);
+    }
+    
+    .homepage {
+      background-color: #f8f9fa;
+    }
+    
+    /* Hero section mới với background gradient */
+    .hero-section {
+      position: relative;
+      background: linear-gradient(135deg, #7209b7, #3a0ca3);
+      color: #fff;
+      border-radius: 0 0 50px 50px;
+      padding: 5rem 0 8rem;
+      margin-bottom: 6rem;
+      overflow: hidden;
+    }
+    
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('/images/pattern.svg');
+      background-repeat: repeat;
+      opacity: 0.1;
+    }
+    
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .hero-title {
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      line-height: 1.2;
+    }
+    
+    .hero-subtitle {
+      font-size: 1.25rem;
+      opacity: 0.8;
+      margin-bottom: 2rem;
+    }
+    
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .hero-btn {
+      padding: 0.75rem 2rem;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    
+    .btn-explore {
+      background-color: #fff;
+      color: var(--primary-color);
+    }
+    
+    .btn-explore:hover {
+      background-color: #f0f0f0;
+    }
+    
+    .btn-signup {
+      background-color: var(--accent-color);
+      color: #fff;
+      border: none;
+    }
+    
+    .btn-signup:hover {
+      background-color: #3db8df;
+    }
+    
+    .hero-stats {
+      display: flex;
+      gap: 2.5rem;
+      margin-top: 3rem;
+    }
+    
+    .stat-item {
+      text-align: center;
+    }
+    
+    .statistic-value {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 0.25rem;
+      line-height: 1;
+    }
+    
+    .statistic-label {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+    
+    .hero-image {
+      position: relative;
+      text-align: center;
+    }
+    
+    .floating-books {
+      position: relative;
+      max-width: 100%;
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0px); }
+    }
+    
+    /* Featured Books */
+    .featured-section {
+      margin-top: -5rem;
+      margin-bottom: 4rem;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .section-title {
+      text-align: center;
+      margin-bottom: 1rem;
+      font-size: 2.25rem;
+      font-weight: 700;
+    }
+    
+    .section-subtitle {
+      text-align: center;
+      color: var(--light-text);
+      margin-bottom: 3rem;
+    }
+    
+    .featured-wrapper {
+      position: relative;
+    }
+    
+    .swiper {
+      width: 100%;
+      padding-bottom: 3rem;
+    }
+    
+    .book-card {
+      background: #fff;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .book-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+    
+    .book-card-img {
+      position: relative;
+      height: 320px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f5f5f5;
+    }
+    
+    .book-card-img img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      transition: all 0.5s;
+    }
+    
+    .book-card:hover .book-card-img img {
+      transform: scale(1.05);
+    }
+    
+    .book-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .book-card:hover .book-overlay {
+      opacity: 1;
+    }
+    
+    .book-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+    
+    .book-action-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-color);
+      transition: all 0.3s;
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    
+    .book-card:hover .book-action-btn {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    
+    .book-action-btn:hover {
+      background: var(--primary-color);
+      color: #fff;
+    }
+    
+    .book-action-btn:nth-child(1) {
+      transition-delay: 0.05s;
+    }
+    
+    .book-action-btn:nth-child(2) {
+      transition-delay: 0.1s;
+    }
+    
+    .book-card-body {
+      padding: 1.5rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .book-card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .book-card-author {
+      color: var(--light-text);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+    
+    .book-card-footer {
+      margin-top: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .book-rating {
+      display: flex;
+      align-items: center;
+      color: #ffc107;
+    }
+    
+    .book-rating-number {
+      color: var(--text-color);
+      margin-left: 0.5rem;
+      font-weight: 600;
+    }
+    
+    /* Categories Section */
+    .categories-section {
+      padding: 5rem 0;
+      background-color: #f0f2f5;
+    }
+    
+    .category-card {
+      padding: 2rem;
+      text-align: center;
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      height: 100%;
+    }
+    
+    .category-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .category-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: var(--primary-color);
+    }
+    
+    .category-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: rgba(114, 9, 183, 0.1);
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      margin: 0 auto 1.5rem;
+    }
+    
+    .category-name {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+    
+    .category-count {
+      color: var(--light-text);
+      margin-bottom: 1.5rem;
+    }
+    
+    /* Top Authors */
+    .authors-section {
+      padding: 5rem 0;
+    }
+    
+    .author-card {
+      display: flex;
+      align-items: center;
+      background: #fff;
+      border-radius: 15px;
+      padding: 1.5rem;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s;
+      margin-bottom: 1.5rem;
+    }
+    
+    .author-card:hover {
+      transform: translateX(5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .author-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-right: 1.5rem;
+      flex-shrink: 0;
+    }
+    
+    .author-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .author-details {
+      flex-grow: 1;
+    }
+    
+    .author-name {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    .author-books {
+      color: var(--light-text);
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .author-bio {
+      color: var(--text-color);
+      font-size: 0.95rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    /* App Download */
+    .app-section {
+      padding: 5rem 0;
+      background-color: var(--primary-color);
+      color: #fff;
+      border-radius: 30px;
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 5rem;
+    }
+    
+    .app-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('/images/pattern.svg');
+      background-repeat: repeat;
+      opacity: 0.05;
+    }
+    
+    .app-content {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .app-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+    }
+    
+    .app-desc {
+      font-size: 1.1rem;
+      opacity: 0.8;
+      margin-bottom: 2rem;
+      max-width: 80%;
+    }
+    
+    .app-buttons {
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .app-btn {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 0.75rem 1.5rem;
+      border-radius: 10px;
+      color: #fff;
+      transition: all 0.3s;
+    }
+    
+    .app-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-3px);
+    }
+    
+    .app-btn i {
+      font-size: 1.75rem;
+      margin-right: 0.75rem;
+    }
+    
+    .app-btn-text small {
+      display: block;
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
+    
+    .app-btn-text span {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    
+    .app-image {
+      text-align: center;
+    }
+    
+    .app-image img {
+      max-width: 100%;
+      transform: translateY(0px);
+      animation: floatApp 6s ease-in-out infinite;
+    }
+    
+    @keyframes floatApp {
+      0% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-15px) rotate(2deg); }
+      100% { transform: translateY(0px) rotate(0deg); }
+    }
+    
+    /* Newsletter */
+    .newsletter-section {
+      padding: 4rem 0;
+      text-align: center;
+    }
+    
+    .newsletter-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    
+    .newsletter-subtitle {
+      color: var(--light-text);
+      margin-bottom: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .newsletter-form {
+      max-width: 500px;
+      margin: 0 auto;
+      position: relative;
+    }
+    
+    .newsletter-input {
+      width: 100%;
+      padding: 1rem 1.5rem;
+      border-radius: 50px;
+      border: 1px solid #e0e0e0;
+      background: #f8f9fa;
+      font-size: 1rem;
+      padding-right: 7rem;
+    }
+    
+    .newsletter-btn {
+      position: absolute;
+      right: 5px;
+      top: 5px;
+      background: var(--primary-color);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 0.75rem 1.5rem;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    
+    .newsletter-btn:hover {
+      background: var(--secondary-color);
+    }
+    
+    /* Responsive */
+    @media (max-width: 992px) {
+      .hero-title {
+        font-size: 2.5rem;
+      }
+      
+      .hero-image {
+        margin-top: 3rem;
+      }
+      
+      .app-desc {
+        max-width: 100%;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .hero-section {
+        padding: 4rem 0 6rem;
+      }
+      
+      .hero-stats {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      .app-buttons {
+        flex-direction: column;
+      }
+      
+      .app-image {
+        margin-top: 2rem;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .hero-title {
+        font-size: 2rem;
+      }
+      
+      .hero-buttons {
+        flex-direction: column;
+      }
+      
+      .section-title {
+        font-size: 1.75rem;
+      }
+    }
+  </style>
 </head>
 <body>
-
   <%- include('partials/navbar') %>
   
+  <!-- Hero Section -->
   <section class="hero-section">
     <div class="container">
       <div class="row align-items-center">
         <div class="col-lg-6 hero-content">
           <h1 class="hero-title">Khám phá thế giới qua từng trang sách</h1>
-          <p class="hero-subtitle">ReadingBook mang đến cho bạn trải nghiệm đọc sách trực tuyến tuyệt vời với hàng ngàn đầu sách đa dạng thể loại.</p>
+          <p class="hero-subtitle">Trải nghiệm đọc sách trực tuyến với hàng ngàn tác phẩm đa dạng thể loại, từ văn học kinh điển đến tác phẩm hiện đại.</p>
+          
           <div class="hero-buttons">
             <a href="/library" class="btn btn-light">Khám phá thư viện</a>
-            <a href="/auth/register" class="btn btn-outline-light">Đăng ký miễn phí</a>           
+            <a href="/auth/register" class="btn btn-outline-light">Đăng ký miễn phí</a>
           </div>
         </div>
-        <div class="col-lg-6 d-none d-lg-block">
-          <img src="https://img.freepik.com/free-vector/superhero-standing-front-sunburst_603843-1871.jpg" alt="Reading Illustration" class="img-fluid">
+        <div class="col-lg-6 hero-image">
+          <img src="/images/hero-books.png" alt="Books" class="floating-books">
         </div>
       </div>
     </div>
   </section>
   
+  <!-- Featured Books -->
   <section class="featured-section">
     <div class="container">
       <h2 class="section-title">Sách nổi bật</h2>
-      <p class="section-subtitle">Những cuốn sách được yêu thích nhất</p>
+      <p class="section-subtitle">Những cuốn sách được yêu thích nhất trên nền tảng</p>
       
-      <div class="row">
-        <% const featuredBooks = [
-          { id: 1, title: 'Đắc Nhân Tâm', author: 'Dale Carnegie', rating: 4.8, categories: ['Tâm lý', 'Kỹ năng sống'], cover: 'https://salt.tikicdn.com/cache/w1200/ts/product/df/7d/da/d340edda2b0eacb7ddc47537cddb5e08.jpg' },
-          { id: 2, title: 'Nhà Giả Kim', author: 'Paulo Coelho', rating: 4.6, categories: ['Tiểu thuyết', 'Tâm linh'], cover: 'https://bizweb.dktcdn.net/thumb/1024x1024/100/363/455/products/nhagiakimnew03.jpg?v=1705552576547' },
-          { id: 3, title: 'Tư Duy Nhanh Và Chậm', author: 'Daniel Kahneman', rating: 4.5, categories: ['Tâm lý', 'Khoa học'], cover: 'https://salt.tikicdn.com/cache/w1200/ts/product/22/cb/a9/524a27dcd45e8a13ae6eecb3dfacba7c.jpg' },
-          { id: 4, title: 'Sapiens: Lược Sử Loài Người', author: 'Yuval Noah Harari', rating: 4.7, categories: ['Lịch sử', 'Khoa học'], cover: 'https://bizweb.dktcdn.net/100/197/269/products/sapiens-luoc-su-ve-loai-nguoi-outline-5-7-2017-02.jpg?v=1520935327270' }
-        ] %>
-        
-        <% featuredBooks.forEach(book => { %>
-          <div class="col-md-6 col-lg-3 mb-4">
-            <div class="book-card">
-              <div class="book-cover">
-                <img src="<%= book.cover %>" alt="<%= book.title %>">
-                <div class="book-favorite" data-book-id="<%= book.id %>">
-                  <i class="far fa-heart"></i>
-                </div>
-              </div>
-              <div class="book-info">
-                <h3 class="book-title"><%= book.title %></h3>
-                <p class="book-author"><%= book.author %></p>
-                <div class="book-rating">
-                  <div class="rating-stars">
-                    <% for (let j = 0; j < 5; j++) { %>
-                      <% if (j < Math.floor(book.rating)) { %>
-                        <i class="fas fa-star"></i>
-                      <% } else if (j < book.rating && book.rating % 1 !== 0) { %>
-                        <i class="fas fa-star-half-alt"></i>
-                      <% } else { %>
-                        <i class="far fa-star"></i>
-                      <% } %>
-                    <% } %>
+      <div class="featured-wrapper">
+        <div class="swiper featured-swiper">
+          <div class="swiper-wrapper">
+            <% featuredBooks.forEach(book => { %>
+              <div class="swiper-slide">
+                <div class="book-card">
+                  <div class="book-card-img">
+                    <img src="<%= book.cover %>" alt="<%= book.title %>">
+                    <div class="book-overlay">
+                      <div class="book-actions">
+                        <a href="/books/<%= book.id %>" class="book-action-btn">
+                          <i class="fas fa-eye"></i>
+                        </a>
+                        <a href="#" class="book-action-btn favorite-button" data-id="<%= book.id %>">
+                          <i class="far fa-heart"></i>
+                        </a>
+                      </div>
+                    </div>
                   </div>
-                  <span><%= book.rating.toFixed(1) %></span>
-                </div>
-                <div class="book-categories">
-                  <% book.categories.forEach(category => { %>
-                    <span class="category-badge"><%= category %></span>
-                  <% }) %>
+                  <div class="book-card-body">
+                    <h3 class="book-card-title"><%= book.title %></h3>
+                    <p class="book-card-author"><%= book.author %></p>
+                    <div class="book-card-footer">
+                      <div class="book-rating">
+                        <i class="fas fa-star"></i>
+                        <span class="book-rating-number"><%= book.rating %></span>
+                      </div>
+                      <a href="/books/<%= book.id %>" class="btn btn-sm btn-outline-primary">Đọc ngay</a>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+            <% }) %>
           </div>
-        <% }) %>
-      </div>
-      
-      <div class="text-center mt-4">
-        <a href="/library" class="btn btn-outline-primary">Xem tất cả sách</a>
+          <div class="swiper-pagination"></div>
+        </div>
       </div>
     </div>
   </section>
   
+  <!-- Categories -->
   <section class="categories-section">
     <div class="container">
-      <h2 class="section-title">Thể loại sách</h2>
-      <p class="section-subtitle">Khám phá sách theo thể loại yêu thích của bạn</p>
+      <h2 class="section-title">Khám phá thể loại</h2>
+      <p class="section-subtitle">Tìm kiếm sách theo sở thích của bạn</p>
       
       <div class="row">
-        <% const categories = [
-          { name: 'Tiểu thuyết', icon: 'fa-book', count: 120 },
-          { name: 'Kinh doanh', icon: 'fa-chart-line', count: 85 },
-          { name: 'Tâm lý học', icon: 'fa-brain', count: 64 },
-          { name: 'Khoa học', icon: 'fa-flask', count: 72 }
-        ] %>
+        <% for (let i = 0; i < 6; i++) { %>
+          <div class="col-md-4 col-sm-6">
+            <div class="category-card">
+              <div class="category-icon">
+                <i class="fas <%= ['fa-history', 'fa-heart', 'fa-dragon', 'fa-skull', 'fa-flask', 'fa-globe'][i] %>"></i>
+              </div>
+              <h3 class="category-name"><%= ['Lịch sử', 'Lãng mạn', 'Kỳ ảo', 'Kinh dị', 'Khoa học', 'Văn học thế giới'][i] %></h3>
+              <p class="category-count"><%= [120, 150, 200, 80, 95, 230][i] %> cuốn sách</p>
+              <a href="/library?category=<%= ['Lịch sử', 'Lãng mạn', 'Kỳ ảo', 'Kinh dị', 'Khoa học', 'Văn học thế giới'][i] %>" class="btn btn-outline-primary">Khám phá</a>
+            </div>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Top Authors -->
+  <section class="authors-section">
+    <div class="container">
+      <h2 class="section-title">Tác giả nổi bật</h2>
+      <p class="section-subtitle">Những cây bút tài năng với nhiều tác phẩm được yêu thích</p>
+      
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="author-card">
+            <div class="author-avatar">
+              <img src="/images/authors/author1.jpg" alt="Tác giả">
+            </div>
+            <div class="author-details">
+              <h3 class="author-name">Nguyễn Nhật Ánh</h3>
+              <p class="author-books">25 tác phẩm</p>
+              <p class="author-bio">Nhà văn nổi tiếng với những tác phẩm văn học thanh thiếu niên đầy tính nhân văn và gần gũi với đời sống.</p>
+            </div>
+          </div>
+        </div>
         
-        <% categories.forEach(category => { %>
-          <div class="col-md-6 col-lg-3 mb-4">
-            <a href="/categories/<%= category.name.toLowerCase().replace(/\s+/g, '-') %>" class="text-decoration-none">
-              <div class="category-card">
-                <div class="category-icon">
-                  <i class="fas <%= category.icon %>"></i>
-                </div>
-                <div class="category-info">
-                  <h3 class="category-title"><%= category.name %></h3>
-                  <p class="category-count"><%= category.count %> cuốn sách</p>
-                </div>
+        <div class="col-lg-6">
+          <div class="author-card">
+            <div class="author-avatar">
+              <img src="/images/authors/author2.jpg" alt="Tác giả">
+            </div>
+            <div class="author-details">
+              <h3 class="author-name">Nguyễn Ngọc Tư</h3>
+              <p class="author-books">18 tác phẩm</p>
+              <p class="author-bio">Nhà văn với nhiều tác phẩm mang đậm hơi thở miền Tây Nam Bộ, nhiều lần đoạt giải thưởng văn học uy tín.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-lg-6">
+          <div class="author-card">
+            <div class="author-avatar">
+              <img src="/images/authors/author3.jpg" alt="Tác giả">
+            </div>
+            <div class="author-details">
+              <h3 class="author-name">Trang Hạ</h3>
+              <p class="author-books">15 tác phẩm</p>
+              <p class="author-bio">Nhà văn nữ với phong cách viết sắc sảo, mạnh mẽ về đề tài tình yêu và cuộc sống hiện đại.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-lg-6">
+          <div class="author-card">
+            <div class="author-avatar">
+              <img src="/images/authors/author4.jpg" alt="Tác giả">
+            </div>
+            <div class="author-details">
+              <h3 class="author-name">Nguyễn Phong Việt</h3>
+              <p class="author-books">12 tác phẩm</p>
+              <p class="author-bio">Nhà thơ, nhà văn trẻ với những tác phẩm thơ và văn xuôi lãng mạn được nhiều độc giả trẻ yêu thích.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- App Download -->
+  <section class="app-section">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6 app-content">
+          <h2 class="app-title">Đọc sách mọi lúc, mọi nơi</h2>
+          <p class="app-desc">Tải ứng dụng Bookverse để đọc sách mọi lúc, mọi nơi. Trải nghiệm đọc sách tuyệt vời trên thiết bị di động của bạn.</p>
+          
+          <div class="app-buttons">
+            <a href="#" class="app-btn">
+              <i class="fab fa-google-play"></i>
+              <div class="app-btn-text">
+                <small>Tải về từ</small>
+                <span>Google Play</span>
+              </div>
+            </a>
+            <a href="#" class="app-btn">
+              <i class="fab fa-apple"></i>
+              <div class="app-btn-text">
+                <small>Tải về từ</small>
+                <span>App Store</span>
               </div>
             </a>
           </div>
-        <% }) %>
-      </div>
-      
-      <div class="text-center mt-4">
-        <a href="/categories" class="btn btn-outline-primary">Xem tất cả thể loại</a>
+        </div>
+        <div class="col-lg-6 app-image">
+          <img src="/images/mobile-app.png" alt="Mobile App">
+        </div>
       </div>
     </div>
   </section>
   
-  <section class="cta-section">
+  <!-- Newsletter -->
+  <section class="newsletter-section">
     <div class="container">
-      <h2 class="cta-title">Bắt đầu hành trình đọc sách ngay hôm nay</h2>
-      <p class="cta-subtitle">Đăng ký tài khoản miễn phí để truy cập vào thư viện sách đa dạng, lưu sách yêu thích và theo dõi tiến trình đọc của bạn.</p>
-      <a href="/auth/register" class="btn btn-light btn-lg">Đăng ký ngay</a>
-    </div>
-  </section>
-  
-  <section class="testimonials-section">
-    <div class="container">
-      <h2 class="section-title">Người dùng nói gì về chúng tôi</h2>
-      <p class="section-subtitle">Trải nghiệm từ cộng đồng người đọc</p>
+      <h2 class="newsletter-title">Đăng ký nhận thông báo</h2>
+      <p class="newsletter-subtitle">Cập nhật sách mới, khuyến mãi đặc biệt và các sự kiện sắp tới</p>
       
-      <div class="row">
-        <% const testimonials = [
-          { content: 'ReadingBook đã thay đổi hoàn toàn thói quen đọc sách của tôi. Giờ đây tôi có thể đọc mọi lúc mọi nơi!', name: 'Nguyễn Văn A', title: 'Giáo viên' },
-          { content: 'Tôi yêu thích bộ sưu tập sách đa dạng và giao diện dễ sử dụng. Đây là ứng dụng đọc sách tốt nhất mà tôi từng dùng.', name: 'Trần Thị B', title: 'Sinh viên' },
-          { content: 'Tính năng đánh dấu và ghi chú giúp tôi học tập hiệu quả hơn rất nhiều. Cảm ơn ReadingBook!', name: 'Lê Văn C', title: 'Kỹ sư phần mềm' }
-        ] %>
-        
-        <% testimonials.forEach(testimonial => { %>
-          <div class="col-md-4 mb-4">
-            <div class="testimonial-card">
-              <div class="testimonial-content">
-                <p><%= testimonial.content %></p>
-              </div>
-              <div class="testimonial-author">
-                <div class="author-avatar">
-                  <img src="https://source.unsplash.com/random/100x100?portrait&sig=<%= Math.random() %>" alt="<%= testimonial.name %>">
-                </div>
-                <div class="author-info">
-                  <h5><%= testimonial.name %></h5>
-                  <p><%= testimonial.title %></p>
-                </div>
-              </div>
-            </div>
-          </div>
-        <% }) %>
-      </div>
+      <form class="newsletter-form">
+        <input type="email" class="newsletter-input" placeholder="Nhập địa chỉ email của bạn">
+        <button type="submit" class="newsletter-btn">Đăng ký</button>
+      </form>
     </div>
   </section>
   
   <%- include('partials/footer') %>
   
+  <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      // Thiết lập Swiper
+      const featuredSwiper = new Swiper('.featured-swiper', {
+        slidesPerView: 1,
+        spaceBetween: 20,
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true,
+        },
+        breakpoints: {
+          640: {
+            slidesPerView: 2,
+          },
+          992: {
+            slidesPerView: 3,
+          },
+          1200: {
+            slidesPerView: 4,
+          },
+        },
+        autoplay: {
+          delay: 3000,
+          disableOnInteraction: false,
+        },
+      });
+      
       // Xử lý nút yêu thích
-      const favoriteButtons = document.querySelectorAll('.book-favorite');
+      const favoriteButtons = document.querySelectorAll('.favorite-button');
       favoriteButtons.forEach(button => {
         button.addEventListener('click', function(e) {
           e.preventDefault();
           
-          const bookId = this.dataset.bookId;
+          const bookId = this.dataset.id;
           const icon = this.querySelector('i');
-          const isFavorite = icon.classList.contains('fas');
           
-          // Kiểm tra đăng nhập
-          const isLoggedIn = document.body.classList.contains('logged-in');
-          if (!isLoggedIn) {
-            window.location.href = `/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`;
-            return;
-          }
-          
-          // Gửi yêu cầu API để thêm/xóa khỏi danh sách yêu thích
-          if (isFavorite) {
-            // Xóa khỏi yêu thích
-            fetch(`/api/books/${bookId}/favorites`, {
-              method: 'DELETE',
-              headers: {
-                'Content-Type': 'application/json'
-              }
-            })
+          // Kiểm tra trạng thái đăng nhập thông qua fetch API
+          fetch('/api/auth/check-login')
             .then(response => response.json())
             .then(data => {
-              if (data.success) {
-                icon.classList.remove('fas');
-                icon.classList.add('far');
+              if (data.isLoggedIn) {
+                // Người dùng đã đăng nhập - thêm vào yêu thích
+                fetch(`/api/books/${bookId}/favorites`, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  }
+                })
+                .then(response => response.json())
+                .then(data => {
+                  if (data.success) {
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                  }
+                })
+                .catch(error => console.error('Error:', error));
+              } else {
+                // Người dùng chưa đăng nhập - chuyển hướng
+                window.location.href = '/auth/login';
               }
             })
-            .catch(error => console.error('Error:', error));
-          } else {
-            // Thêm vào yêu thích
-            fetch(`/api/books/${bookId}/favorites`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              }
-            })
-            .then(response => response.json())
-            .then(data => {
-              if (data.success) {
-                icon.classList.remove('far');
-                icon.classList.add('fas');
-              }
-            })
-            .catch(error => console.error('Error:', error));
-          }
+            .catch(error => {
+              console.error('Error checking login status:', error);
+              window.location.href = '/auth/login';
+            });
         });
       });
     });
