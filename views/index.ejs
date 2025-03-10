@@ -604,8 +604,7 @@
     }
   </style>
 </head>
-
-<body class="homepage">
+<body>
   <%- include('partials/navbar') %>
   
   <!-- Hero Section -->
@@ -617,29 +616,8 @@
           <p class="hero-subtitle">Trải nghiệm đọc sách trực tuyến với hàng ngàn tác phẩm đa dạng thể loại, từ văn học kinh điển đến tác phẩm hiện đại.</p>
           
           <div class="hero-buttons">
-            <a href="/library" class="btn hero-btn btn-explore">
-              <i class="fas fa-book-open me-2"></i> Khám phá ngay
-            </a>
-            <% if (!user) { %>
-              <a href="/auth/register" class="btn hero-btn btn-signup">
-                <i class="fas fa-user-plus me-2"></i> Đăng ký miễn phí
-              </a>
-            <% } %>
-          </div>
-          
-          <div class="hero-stats">
-            <div class="stat-item">
-              <h3 class="statistic-value">1200</h3>
-              <p class="statistic-label">Đầu sách</p>
-            </div>
-            <div class="stat-item">
-              <h3 class="statistic-value">50</h3>
-              <p class="statistic-label">Thể loại</p>
-            </div>
-            <div class="stat-item">
-              <h3 class="statistic-value">100K</h3>
-              <p class="statistic-label">Người đọc</p>
-            </div>
+            <a href="/library" class="btn btn-light">Khám phá thư viện</a>
+            <a href="/auth/register" class="btn btn-outline-light">Đăng ký miễn phí</a>
           </div>
         </div>
         <div class="col-lg-6 hero-image">
