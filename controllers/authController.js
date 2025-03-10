@@ -127,54 +127,67 @@ exports.getLoginForm = (req, res) => {
 // @desc    Đăng nhập người dùng
 // @route   POST /auth/login
 // @access  Public
-exports.login = async (req, res, next) => {
+exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const redirect = req.body.redirect || '/';
-
-    // Kiểm tra email và password
+    
+    // Kiểm tra email và password có được nhập không
     if (!email || !password) {
       return res.render('login', {
         title: 'Đăng nhập',
-        page: 'auth',
         error: 'Vui lòng nhập email và mật khẩu',
-        email
+        email,
+        user: req.user
       });
     }
 
-    // Kiểm tra user
+    // Kiểm tra xem user có tồn tại không
     const user = await User.findOne({ email }).select('+password');
-
     if (!user) {
       return res.render('login', {
         title: 'Đăng nhập',
-        page: 'auth',
         error: 'Email hoặc mật khẩu không chính xác',
-        email
+        email,
+        user: req.user
       });
     }
 
     // Kiểm tra mật khẩu
-    const isMatch = await user.matchPassword(password);
-
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.render('login', {
         title: 'Đăng nhập',
-        page: 'auth',
         error: 'Email hoặc mật khẩu không chính xác',
-        email
+        email,
+        user: req.user
       });
     }
 
-    // Tạo token và đăng nhập
-    sendTokenResponse(user, 200, res, redirect);
+    // Tạo token
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRE || '30d'
+    });
+
+    // Lưu token vào cookie
+    res.cookie('token', token, {
+      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      httpOnly: true
+    });
+
+    // Kiểm tra nếu là tài khoản admin, chuyển đến trang admin
+    if (user.role === 'admin') {
+      return res.redirect('/admin');
+    }
+
+    // Chuyển hướng đến trang chính nếu không phải admin
+    res.redirect(req.query.redirect || '/');
   } catch (err) {
-    console.error(err);
+    console.error('Lỗi khi đăng nhập:', err);
     res.render('login', {
       title: 'Đăng nhập',
-      page: 'auth',
-      error: 'Đã xảy ra lỗi, vui lòng thử lại',
-      email: req.body.email
+      error: 'Có lỗi xảy ra, vui lòng thử lại',
+      email: req.body.email,
+      user: req.user
     });
   }
 };

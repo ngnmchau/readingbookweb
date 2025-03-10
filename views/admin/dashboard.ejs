@@ -1,0 +1,185 @@
+<% 
+// Lưu nội dung trang vào biến content
+let content = `
+<div class="content-wrapper">
+  <div class="container-fluid">
+    <!-- Thống kê tổng quan -->
+    <div class="row mb-4">
+      <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+          <div class="card-body">
+            <div class="row no-gutters align-items-center">
+              <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                  Tổng số người dùng</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800">${stats.userCount}</div>
+              </div>
+              <div class="col-auto">
+                <i class="fas fa-users fa-2x text-gray-300"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+          <div class="card-body">
+            <div class="row no-gutters align-items-center">
+              <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                  Tổng số sách</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800">${stats.bookCount}</div>
+              </div>
+              <div class="col-auto">
+                <i class="fas fa-book fa-2x text-gray-300"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+          <div class="card-body">
+            <div class="row no-gutters align-items-center">
+              <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                  Lượt đọc tháng này</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800">${stats.viewCount}</div>
+              </div>
+              <div class="col-auto">
+                <i class="fas fa-eye fa-2x text-gray-300"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+          <div class="card-body">
+            <div class="row no-gutters align-items-center">
+              <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                  Bình luận mới</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800">${stats.commentCount}</div>
+              </div>
+              <div class="col-auto">
+                <i class="fas fa-comments fa-2x text-gray-300"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Biểu đồ và thống kê -->
+    <div class="row">
+      <!-- Biểu đồ người dùng -->
+      <div class="col-xl-8 col-lg-7">
+        <div class="card shadow mb-4">
+          <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Thống kê người dùng</h6>
+            <div class="dropdown no-arrow">
+              <a class="dropdown-toggle" href="#" role="button" id="userStatsDropdown" 
+                data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userStatsDropdown">
+                <div class="dropdown-header">Tùy chọn:</div>
+                <a class="dropdown-item" href="#">Xuất báo cáo</a>
+                <a class="dropdown-item" href="#">Xem chi tiết</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Cài đặt hiển thị</a>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="chart-area">
+              <canvas id="userStatsChart"></canvas>
+            </div>
+            <div class="text-center mt-3">
+              <em class="text-muted">Chức năng thống kê sẽ hiển thị dữ liệu khi hệ thống có dữ liệu người dùng</em>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Biểu đồ thể loại -->
+      <div class="col-xl-4 col-lg-5">
+        <div class="card shadow mb-4">
+          <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Phân bố thể loại sách</h6>
+            <div class="dropdown no-arrow">
+              <a class="dropdown-toggle" href="#" role="button" id="categoryStatsDropdown" 
+                data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="categoryStatsDropdown">
+                <div class="dropdown-header">Tùy chọn:</div>
+                <a class="dropdown-item" href="#">Xuất báo cáo</a>
+                <a class="dropdown-item" href="#">Xem chi tiết</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Cài đặt hiển thị</a>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="chart-pie">
+              <canvas id="categoryStatsChart"></canvas>
+            </div>
+            <div class="text-center mt-3">
+              <em class="text-muted">Chức năng thống kê sẽ hiển thị khi có dữ liệu thể loại sách</em>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hoạt động gần đây và sách mới -->
+    <div class="row">
+      <!-- Hoạt động gần đây -->
+      <div class="col-lg-6 mb-4">
+        <div class="card shadow mb-4">
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Hoạt động gần đây</h6>
+          </div>
+          <div class="card-body">
+            <div class="text-center py-4">
+              <i class="fas fa-info-circle text-muted mb-3" style="font-size: 2rem;"></i>
+              <p class="text-muted">Chưa có hoạt động nào gần đây</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sách mới thêm -->
+      <div class="col-lg-6 mb-4">
+        <div class="card shadow mb-4">
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Sách mới thêm</h6>
+          </div>
+          <div class="card-body">
+            <div class="text-center py-4">
+              <i class="fas fa-book text-muted mb-3" style="font-size: 2rem;"></i>
+              <p class="text-muted">Chưa có sách nào được thêm vào hệ thống</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>`;
+
+// Truyền nội dung vào layout
+%>
+
+<%- include('./layouts/admin-layout', {
+  title: 'Bảng điều khiển',
+  breadcrumbs: [
+    { name: 'Trang chủ', url: '/admin' },
+    { name: 'Bảng điều khiển', active: true }
+  ],
+  content: content
+}) %> 
