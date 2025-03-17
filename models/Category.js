@@ -16,6 +16,10 @@ const CategorySchema = new mongoose.Schema({
     type: String,
     maxlength: [500, 'Mô tả không được vượt quá 500 ký tự']
   },
+  image: {
+    type: String,
+    default: '/images/default-category.png'
+  },
   createdAt: {
     type: Date,
     default: Date.now

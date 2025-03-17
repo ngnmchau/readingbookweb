@@ -82,67 +82,59 @@ exports.getBooks = async (req, res, next) => {
   }
 };
 
-// Lấy thông tin chi tiết sách
-exports.getBook = async (req, res, next) => {
+// Lấy thông tin chi tiết của một cuốn sách
+exports.getBook = async (req, res) => {
   try {
-    const book = await Book.findById(req.params.id);
-    
+    const { id } = req.params;
+
+    // Tăng lượt xem cho sách
+    const book = await Book.findByIdAndUpdate(
+      id,
+      { $inc: { views: 1 } },
+      { new: true }
+    )
+      .populate("author", "name")
+      .populate("categories", "name slug");
+
     if (!book) {
-      return res.status(404).json({
-        success: false,
-        error: 'Không tìm thấy sách'
+      return res.status(404).render("error", {
+        statusCode: 404,
+        message: "Không tìm thấy sách",
       });
     }
-    
-    // Tăng lượt xem
-    book.views += 1;
-    await book.save();
-    
-    // Lấy danh sách chương
-    const chapters = await Chapter.find({ bookId: book._id }).sort('createdAt');
-    
-    // Lấy sách liên quan (cùng thể loại)
+
+    // Lấy tất cả chương của cuốn sách và sắp xếp theo thứ tự
+    const chapters = await Chapter.find({ bookId: book._id }).sort({ order: 1 });
+
+    // Lấy sách cùng thể loại
     const relatedBooks = await Book.find({
-      categories: { $in: book.categories },
-      _id: { $ne: book._id }
-    }).limit(4);
-    
-    // Kiểm tra xem sách có trong danh sách yêu thích không (nếu đã đăng nhập)
-    let isFavorite = false;
+      categories: { $in: book.categories.map((cat) => cat._id) },
+      _id: { $ne: book._id },
+    })
+      .populate("author", "name")
+      .limit(3);
+
+    // Kiểm tra xem người dùng đã thêm sách vào yêu thích chưa
+    let isFavorited = false;
     if (req.user) {
-      const user = await User.findById(req.user.id);
-      isFavorite = user.favorites.includes(book._id);
+      const user = await User.findById(req.user._id);
+      isFavorited = user.favoriteBooks.includes(book._id);
     }
-    
-    // Lấy tiến độ đọc (nếu đã đăng nhập)
-    let readingProgress = null;
-    if (req.user) {
-      const user = await User.findById(req.user.id);
-      const historyEntry = user.readingHistory.find(
-        entry => entry.book.toString() === book._id.toString()
-      );
-      
-      if (historyEntry) {
-        readingProgress = {
-          lastChapter: historyEntry.chapter,
-          lastRead: historyEntry.lastRead
-        };
-      }
-    }
-    
-    res.render('book-detail', {
+
+    res.render("book-detail", {
+      title: book.title,
+      description: book.description,
+      user: req.user,
       book,
       chapters,
       relatedBooks,
-      isFavorite,
-      readingProgress
+      isFavorited,
     });
-    
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({
-      success: false,
-      error: 'Lỗi máy chủ'
+  } catch (error) {
+    console.error("Error in getBook:", error);
+    res.status(500).render("error", {
+      statusCode: 500,
+      message: "Đã xảy ra lỗi khi lấy thông tin sách",
     });
   }
 };
@@ -150,9 +142,10 @@ exports.getBook = async (req, res, next) => {
 // Lấy danh sách chương của một sách
 exports.getBookChapters = async (req, res, next) => {
   try {
-    const chapters = await Chapter.find({ book: req.params.id })
-      .sort('chapterNumber')
-      .select('title chapterNumber createdAt views');
+    // Sửa từ book thành bookId để phù hợp với schema của Chapter
+    const chapters = await Chapter.find({ bookId: req.params.id })
+      .sort('order')
+      .select('title order createdAt views');
     
     res.status(200).json({
       success: true,
@@ -183,7 +176,7 @@ exports.getChapter = async (req, res, next) => {
     const book = await Book.findById(chapter.bookId);
     
     // Lấy tất cả chương của sách
-    const chapters = await Chapter.find({ bookId: book._id }).sort('createdAt');
+    const chapters = await Chapter.find({ bookId: book._id }).sort('order');
     
     // Tìm chương trước và chương sau
     const currentIndex = chapters.findIndex(c => c._id.toString() === chapter._id.toString());
@@ -196,14 +189,14 @@ exports.getChapter = async (req, res, next) => {
     
     // Cập nhật lịch sử đọc nếu người dùng đã đăng nhập
     if (req.user) {
-      await User.findByIdAndUpdate(req.user.id, {
-        $pull: { readingHistory: { book: chapter.book } },
+      await User.findByIdAndUpdate(req.user._id, {
+        $pull: { readingHistory: { book: chapter.bookId } }
       });
       
-      await User.findByIdAndUpdate(req.user.id, {
+      await User.findByIdAndUpdate(req.user._id, {
         $push: {
           readingHistory: {
-            $each: [{ book: chapter.book, chapter: chapter._id, lastRead: new Date() }],
+            $each: [{ book: chapter.bookId, chapter: chapter._id, lastRead: new Date() }],
             $position: 0,
             $slice: 20, // Giữ 20 mục gần nhất
           },
@@ -215,6 +208,7 @@ exports.getChapter = async (req, res, next) => {
       success: true,
       data: {
         chapter,
+        book,
         navigation: {
           prev: prevChapter ? prevChapter._id : null,
           next: nextChapter ? nextChapter._id : null,
@@ -222,6 +216,7 @@ exports.getChapter = async (req, res, next) => {
       },
     });
   } catch (error) {
+    console.error('Lỗi khi lấy chương sách:', error);
     res.status(400).json({
       success: false,
       error: error.message,
@@ -229,37 +224,113 @@ exports.getChapter = async (req, res, next) => {
   }
 };
 
-// Thêm sách vào danh sách yêu thích
-exports.addToFavorites = async (req, res, next) => {
+// Thêm đánh giá cho sách
+exports.addBookReview = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    const { id } = req.params;
+    const { rating, content } = req.body;
     
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        error: 'Không tìm thấy người dùng',
-      });
-    }
-    
-    // Kiểm tra xem sách đã có trong danh sách yêu thích chưa
-    if (user.favorites.includes(req.params.id)) {
+    if (!rating || rating < 1 || rating > 5) {
       return res.status(400).json({
         success: false,
-        error: 'Sách đã có trong danh sách yêu thích',
+        message: 'Vui lòng cung cấp đánh giá từ 1-5 sao'
       });
     }
     
-    user.favorites.push(req.params.id);
+    const book = await Book.findById(id);
+    
+    if (!book) {
+      return res.status(404).json({
+        success: false,
+        message: 'Không tìm thấy sách'
+      });
+    }
+    
+    // Kiểm tra xem người dùng đã đánh giá sách chưa
+    const existingComment = book.comments.find(
+      comment => comment.user.toString() === req.user._id.toString()
+    );
+    
+    if (existingComment) {
+      // Cập nhật đánh giá hiện có
+      existingComment.content = content;
+      existingComment.rating = rating;
+      existingComment.createdAt = Date.now();
+    } else {
+      // Thêm đánh giá mới
+      book.comments.push({
+        user: req.user._id,
+        content,
+        rating,
+        createdAt: Date.now()
+      });
+    }
+    
+    // Tính lại rating trung bình
+    let totalRating = 0;
+    book.comments.forEach(comment => {
+      totalRating += comment.rating;
+    });
+    
+    book.rating = totalRating / book.comments.length;
+    
+    await book.save();
+    
+    // Populate thông tin người dùng trong comments
+    await book.populate('comments.user', 'name avatar');
+    
+    res.status(200).json({
+      success: true,
+      message: 'Đã thêm đánh giá của bạn',
+      data: book.comments
+    });
+  } catch (error) {
+    console.error('Lỗi khi thêm đánh giá:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Có lỗi xảy ra khi thêm đánh giá'
+    });
+  }
+};
+
+// Thêm sách vào mục yêu thích
+exports.addToFavorites = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+    
+    const book = await Book.findById(id);
+    
+    if (!book) {
+      return res.status(404).json({
+        success: false,
+        message: 'Không tìm thấy sách'
+      });
+    }
+    
+    const user = await User.findById(userId);
+    
+    // Kiểm tra xem sách đã có trong danh sách yêu thích chưa
+    if (user.favorites.includes(id)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Sách đã có trong danh sách yêu thích của bạn'
+      });
+    }
+    
+    // Thêm sách vào danh sách yêu thích
+    user.favorites.push(id);
     await user.save();
     
     res.status(200).json({
       success: true,
-      data: user.favorites,
+      message: 'Đã thêm sách vào danh sách yêu thích'
     });
   } catch (error) {
-    res.status(400).json({
+    console.error('Lỗi khi thêm vào yêu thích:', error);
+    res.status(500).json({
       success: false,
-      error: error.message,
+      message: 'Có lỗi xảy ra khi thêm vào danh sách yêu thích'
     });
   }
 };

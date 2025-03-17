@@ -124,4 +124,8 @@
   <% } else if (page === 'library') { %>
     <link rel="stylesheet" href="/css/library.css">
   <% } %>
+<% } %>
+
+<% if (typeof readerPage !== 'undefined' && readerPage) { %>
+  <link rel="stylesheet" href="/css/reader.css">
 <% } %> 

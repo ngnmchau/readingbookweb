@@ -50,6 +50,22 @@ const BookSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
+  status: {
+    type: String,
+    enum: ['completed', 'ongoing', 'coming soon'],
+    default: 'ongoing'
+  },
+  comments: [{
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    content: String,
+    createdAt: {
+      type: Date,
+      default: Date.now
+    }
+  }],
   pages: {
     type: Number,
     required: true

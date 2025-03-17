@@ -16,13 +16,21 @@ const ChapterSchema = new mongoose.Schema({
     ref: 'Book',
     required: true
   },
+  order: {
+    type: Number,
+    required: [true, 'Vui lòng thêm số thứ tự chương']
+  },
+  views: {
+    type: Number,
+    default: 0
+  },
   createdAt: {
     type: Date,
     default: Date.now
   }
 });
 
-// Tạo index cho book và chapterNumber
-ChapterSchema.index({ book: 1, chapterNumber: 1 }, { unique: true });
+// Sửa index để sử dụng bookId và order thay vì book và chapterNumber
+ChapterSchema.index({ bookId: 1, order: 1 }, { unique: true });
 
 module.exports = mongoose.model('Chapter', ChapterSchema); 

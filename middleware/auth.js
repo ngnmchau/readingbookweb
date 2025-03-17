@@ -48,18 +48,29 @@ exports.loadUser = async (req, res, next) => {
       return next();
     }
 
-    // Xác thực token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    try {
+      // Xác thực token
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret_key');
 
-    // Tìm user từ id trong token
-    const user = await User.findById(decoded.id);
-    
-    // Thêm user vào res.locals để sử dụng trong views
-    res.locals.user = user;
-    next();
+      // Tìm user từ id trong token
+      const user = await User.findById(decoded.id);
+      
+      // Thêm user vào res.locals để sử dụng trong views
+      res.locals.user = user;
+      req.user = user; // Thêm vào req.user để middleware khác sử dụng
+      next();
+    } catch (tokenError) {
+      // Nếu token không hợp lệ hoặc hết hạn, xóa cookie
+      console.log('Token không hợp lệ:', tokenError.message);
+      res.clearCookie('token');
+      res.locals.user = null;
+      req.user = null;
+      next();
+    }
   } catch (err) {
     console.error('Lỗi loadUser:', err);
     res.locals.user = null;
+    req.user = null;
     next();
   }
 };

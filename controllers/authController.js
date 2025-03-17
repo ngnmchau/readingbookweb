@@ -53,23 +53,51 @@ exports.getRegisterForm = (req, res) => {
 // @access  Public
 exports.register = async (req, res, next) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, confirmPassword } = req.body;
+    
+    console.log('Đang cố gắng đăng ký với email:', email);
+    
+    // Kiểm tra xác nhận mật khẩu
+    if (password !== confirmPassword) {
+      console.log('Mật khẩu và xác nhận mật khẩu không khớp');
+      return res.render('register', {
+        title: 'Đăng ký tài khoản',
+        error: 'Mật khẩu và xác nhận mật khẩu không khớp',
+        name,
+        email,
+        page: 'auth'
+      });
+    }
     
     // Tạo username từ email (phần trước @)
     const username = email.split('@')[0];
     
+    // Kiểm tra độ dài mật khẩu
+    if (password.length < 6) {
+      console.log('Mật khẩu quá ngắn');
+      return res.render('register', {
+        title: 'Đăng ký tài khoản',
+        error: 'Mật khẩu phải có ít nhất 6 ký tự',
+        name,
+        email,
+        page: 'auth'
+      });
+    }
+    
     // Tạo người dùng mới
-    await User.create({
+    const user = await User.create({
       name,
       email,
       password,
       username
     });
+    
+    console.log('Đăng ký thành công, người dùng mới với ID:', user._id);
 
     // Chuyển hướng đến trang đăng nhập
     res.redirect('/auth/login?registered=true');
   } catch (err) {
-    console.error(err);
+    console.error('Lỗi đăng ký:', err);
     
     // Kiểm tra lỗi trùng lặp (duplicate key error)
     if (err.code === 11000) {
@@ -131,63 +159,99 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
     
+    console.log('Đang cố gắng đăng nhập với email:', email);
+    
     // Kiểm tra email và password có được nhập không
     if (!email || !password) {
+      console.log('Thiếu email hoặc password');
       return res.render('login', {
         title: 'Đăng nhập',
         error: 'Vui lòng nhập email và mật khẩu',
         email,
-        user: req.user
+        page: 'auth'
       });
     }
 
-    // Kiểm tra xem user có tồn tại không
+    // Kiểm tra xem user có tồn tại không - thông báo chi tiết
     const user = await User.findOne({ email }).select('+password');
+    console.log('User tìm thấy:', user ? 'Có' : 'Không');
+    if (user) {
+      console.log('User ID:', user._id);
+      console.log('Role:', user.role);
+      console.log('Stored Password (Hashed):', user.password);
+      console.log('Plain Password:', password);
+    }
+    
     if (!user) {
+      console.log('Không tìm thấy người dùng với email:', email);
       return res.render('login', {
         title: 'Đăng nhập',
         error: 'Email hoặc mật khẩu không chính xác',
         email,
-        user: req.user
+        page: 'auth'
       });
     }
 
     // Kiểm tra mật khẩu
-    const isMatch = await bcrypt.compare(password, user.password);
+    let isMatch;
+    try {
+      isMatch = await bcrypt.compare(password, user.password);
+      console.log('Kết quả so sánh mật khẩu:', isMatch);
+    } catch (error) {
+      console.error('Lỗi khi so sánh mật khẩu:', error);
+      return res.render('login', {
+        title: 'Đăng nhập',
+        error: 'Có lỗi khi xác thực mật khẩu',
+        email,
+        page: 'auth'
+      });
+    }
+    
     if (!isMatch) {
+      console.log('Mật khẩu không khớp cho email:', email);
       return res.render('login', {
         title: 'Đăng nhập',
         error: 'Email hoặc mật khẩu không chính xác',
         email,
-        user: req.user
+        page: 'auth'
       });
     }
 
     // Tạo token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRE || '30d'
-    });
+    const token = jwt.sign(
+      { id: user._id }, 
+      process.env.JWT_SECRET || 'fallback_secret_key', 
+      { expiresIn: process.env.JWT_EXPIRE || '30d' }
+    );
+    
+    console.log('Đăng nhập thành công, đang tạo token cho user id:', user._id);
 
     // Lưu token vào cookie
-    res.cookie('token', token, {
-      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-      httpOnly: true
-    });
+    const cookieOptions = {
+      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 ngày
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production'
+    };
+    
+    res.cookie('token', token, cookieOptions);
 
     // Kiểm tra nếu là tài khoản admin, chuyển đến trang admin
     if (user.role === 'admin') {
+      console.log('Người dùng là admin, chuyển hướng đến /admin');
       return res.redirect('/admin');
     }
 
-    // Chuyển hướng đến trang chính nếu không phải admin
-    res.redirect(req.query.redirect || '/');
-  } catch (err) {
-    console.error('Lỗi khi đăng nhập:', err);
+    // Chuyển đến trang chủ hoặc trang được yêu cầu trước đó
+    const redirectUrl = req.query.redirect || '/';
+    console.log('Chuyển hướng đến:', redirectUrl);
+    res.redirect(redirectUrl);
+  } catch (error) {
+    console.error('Lỗi đăng nhập:', error);
     res.render('login', {
       title: 'Đăng nhập',
-      error: 'Có lỗi xảy ra, vui lòng thử lại',
+      error: 'Có lỗi khi đăng nhập, vui lòng thử lại sau',
       email: req.body.email,
-      user: req.user
+      page: 'auth'
     });
   }
 };
@@ -386,7 +450,7 @@ exports.updateAvatar = async (req, res, next) => {
     // Cập nhật đường dẫn avatar
     const user = await User.findByIdAndUpdate(
       req.user.id,
-      { avatar: `/uploads/avatars/${req.file.filename}` },
+      { avatar: `/uploads/users/${req.file.filename}` },
       { new: true }
     );
     

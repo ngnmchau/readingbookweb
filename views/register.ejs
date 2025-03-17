@@ -112,17 +112,12 @@
           <label for="password" class="form-label">Mật khẩu</label>
           <div class="input-group">
             <span class="input-group-text"><i class="fas fa-lock"></i></span>
-            <input type="password" class="form-control" id="password" name="password" required>
+            <input type="password" class="form-control" id="password" name="password" required minlength="6">
             <button class="btn btn-outline-secondary toggle-password" type="button">
               <i class="fas fa-eye"></i>
             </button>
           </div>
-          <div class="password-strength mt-2">
-            <div class="progress">
-              <div class="progress-bar" role="progressbar" style="width: 0%"></div>
-            </div>
-            <small class="password-feedback text-muted"></small>
-          </div>
+          <small class="form-text text-muted">Mật khẩu phải có ít nhất 6 ký tự</small>
         </div>
         
         <div class="mb-3">

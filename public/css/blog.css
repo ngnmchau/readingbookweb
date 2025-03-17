@@ -76,7 +76,7 @@
     left: 0;
     width: 100%;
     height: 80px;
-    background: url('/images/wave.svg') repeat-x;
+    background: url('/uploads/common/wave.svg') repeat-x;
     animation: waveAnimation 8s linear infinite;
   }
   
