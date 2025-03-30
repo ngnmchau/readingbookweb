@@ -9,6 +9,14 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
+  // Đặt giá trị tìm kiếm từ URL vào thanh tìm kiếm navbar
+  const searchParam = new URLSearchParams(window.location.search).get('search');
+  const navbarSearchInput = document.querySelector('.search-input');
+  if (searchParam && navbarSearchInput) {
+    navbarSearchInput.value = searchParam;
+    toggleClearButton();
+  }
+  
   // Kiểm tra đăng nhập
   const token = getCookie('token');
   if (token) {
@@ -149,3 +157,15 @@ document.addEventListener('DOMContentLoaded', function() {
     if (userDropdown) userDropdown.style.display = 'block';
   }
 }); 
+
+// Hàm xử lý tìm kiếm từ thanh navbar
+function submitSearch(event) {
+  event.preventDefault();
+  const searchInput = document.querySelector('.search-input');
+  const searchTerm = searchInput.value.trim();
+  
+  if (searchTerm) {
+    // Điều hướng đến trang thư viện với tham số tìm kiếm
+    window.location.href = `/library?search=${encodeURIComponent(searchTerm)}`;
+  }
+} 

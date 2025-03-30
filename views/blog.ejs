@@ -401,13 +401,18 @@
   <!-- Header Section -->
   <section class="blog-header text-center">
     <div class="container">
-      <h1 class="fade-in">Blog ReadingBook</h1>
-      <p class="fade-in">Chia sẻ kinh nghiệm, kiến thức và cảm nhận về sách</p>
+      <% if (locals.isSearchResult && locals.searchQuery) { %>
+        <h1 class="fade-in">Kết quả tìm kiếm: "<%= searchQuery %>"</h1>
+        <p class="fade-in"><a href="/blog" class="btn btn-outline-light mt-2">Quay lại tất cả bài viết</a></p>
+      <% } else { %>
+        <h1 class="fade-in">Blog ReadingBook</h1>
+        <p class="fade-in">Chia sẻ kinh nghiệm, kiến thức và cảm nhận về sách</p>
+      <% } %>
       
       <!-- Thanh tìm kiếm -->
       <div class="blog-search">
         <form action="/blog/search" method="GET">
-          <input type="text" name="query" placeholder="Tìm kiếm bài viết...">
+          <input type="text" name="query" placeholder="Tìm kiếm bài viết..." value="<%= locals.searchQuery || '' %>">
           <button type="submit">Tìm kiếm</button>
         </form>
       </div>
@@ -456,6 +461,16 @@
             <a href="/blog/<%= posts[0]._id %>" class="featured-btn">Đọc tiếp</a>
           </div>
         </div>
+      <% } else if (locals.isSearchResult) { %>
+        <div class="text-center py-5">
+          <h3>Không tìm thấy bài viết nào phù hợp</h3>
+          <p>Vui lòng thử tìm kiếm với từ khóa khác</p>
+        </div>
+      <% } else { %>
+        <div class="text-center py-5">
+          <h3>Chưa có bài viết nào</h3>
+          <p>Hãy quay lại sau</p>
+        </div>
       <% } %>
     </div>
   </section>
@@ -493,12 +508,6 @@
               </div>
             </div>
           <% }) %>
-        <% } else { %>
-          <div class="text-center py-5">
-            <i class="far fa-newspaper fa-4x text-muted mb-3"></i>
-            <h4>Chưa có bài viết nào</h4>
-            <p class="text-muted">Chúng tôi đang cập nhật nội dung, vui lòng quay lại sau.</p>
-          </div>
         <% } %>
       </div>
     </div>

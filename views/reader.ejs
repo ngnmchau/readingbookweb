@@ -1,42 +1,43 @@
-<%- include('partials/head', { 
-  title: 'Đọc sách', 
+<%- include('partials/head', {
+  title: 'Đọc sách',
   description: 'Trang đọc sách trực tuyến',
   readerPage: true
 }) %>
 
+
+<%- include('partials/navbar', { readerPage: true }) %>
+
+
 <div class="reader-page">
-  <div class="reader-header bg-dark text-white shadow-sm">
-    <div class="container-fluid py-2">
-      <div class="row align-items-center">
-        <div class="col-md-4 d-flex align-items-center">
-          <a href="/" class="text-white text-decoration-none me-3">
-            <i class="fas fa-home"></i>
-          </a>
-          <a href="javascript:history.back()" class="text-white text-decoration-none me-3" id="back-to-book">
+  <div class="reader-header bg-white border-bottom shadow-sm">
+    <div class="container-fluid py-3">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+          <a href="javascript:history.back()" class="text-dark text-decoration-none fs-6" id="back-to-book">
             <i class="fas fa-arrow-left me-2"></i> Quay lại
           </a>
         </div>
-        <div class="col-md-4 text-center">
-          <span class="chapter-title" id="chapterTitle"></span>
+        <div class="text-center flex-grow-1">
+          <h1 class="chapter-title fw-bold fs-4 mb-0" id="chapterTitle"></h1>
+          <p class="text-muted small" id="bookTitle"></p>
         </div>
-        <div class="col-md-4 text-end">
-          <!-- Đã bỏ phần nút điều chỉnh cỡ chữ và sáng tối -->
+        <div>
+          <button class="btn btn-outline-secondary btn-sm" id="toggle-dark-mode">
+            <i class="fas fa-moon"></i>
+          </button>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="reader-content py-5">
+
+  <div class="reader-content py-4">
     <div class="container">
       <div class="row justify-content-center">
-        <div class="col-lg-8">
-          <div class="card shadow">
-            <div class="card-header bg-white py-3">
-              <h1 class="book-title h4 mb-1 fw-bold text-center" id="bookTitle"></h1>
-              <h2 class="chapter-title h5 mb-0 text-center text-muted"></h2>
-            </div>
+        <div class="col-lg-9">
+          <div class="card shadow border-0 rounded-3">
             <div class="card-body">
-              <div class="chapter-content" id="chapter-content" data-chapter-id="<%= chapterId %>">
+              <div class="chapter-content px-3" id="chapter-content" data-chapter-id="<%= chapterId %>">
                 <div class="text-center py-5">
                   <div class="spinner-border text-primary" role="status">
                     <span class="visually-hidden">Đang tải...</span>
@@ -47,11 +48,17 @@
             </div>
           </div>
 
-          <div class="chapter-navigation mt-4 d-flex justify-content-between">
-            <a href="#" class="btn btn-outline-primary disabled" id="prev-chapter">
+
+          <div class="chapter-navigation mt-4 d-flex justify-content-between align-items-center">
+            <a href="#" class="btn btn-outline-secondary disabled" id="prev-chapter">
               <i class="fas fa-chevron-left me-2"></i> Chương trước
             </a>
-            <a href="#" class="btn btn-outline-primary disabled" id="next-chapter">
+            <div class="text-center">
+              <div class="spinner-border text-secondary" role="status" id="chapter-loading" style="display: none;">
+                <span class="visually-hidden">Đang tải...</span>
+              </div>
+            </div>
+            <a href="#" class="btn btn-outline-secondary disabled" id="next-chapter">
               Chương sau <i class="fas fa-chevron-right ms-2"></i>
             </a>
           </div>
@@ -61,5 +68,7 @@
   </div>
 </div>
 
+
 <% const readerPage = true %>
-<%- include('partials/footer', { readerPage }) %> 
+<%- include('partials/footer', { readerPage }) %>
+

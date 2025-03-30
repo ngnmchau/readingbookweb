@@ -382,6 +382,8 @@ exports.updateProfile = async (req, res, next) => {
 };
 
 // @desc    Đổi mật khẩu
+// @route   POST /auth/change-password
+// @access  Private
 exports.changePassword = async (req, res, next) => {
   try {
     const { currentPassword, newPassword, confirmPassword } = req.body;

@@ -96,10 +96,23 @@ router.get('/library', async (req, res) => {
     
     // Tìm kiếm theo tiêu đề hoặc tác giả
     if (search) {
-      query.$or = [
-        { title: { $regex: search, $options: 'i' } },
-        { author: { $regex: search, $options: 'i' } }
-      ];
+      // Tách từ khóa tìm kiếm thành các từ riêng biệt
+      const keywords = search.split(/\s+/).filter(word => word.length > 0);
+      
+      // Tạo mảng điều kiện tìm kiếm cho từng từ khóa
+      const searchConditions = [];
+      
+      // Thêm điều kiện tìm kiếm cho từng từ khóa
+      keywords.forEach(keyword => {
+        searchConditions.push(
+          { title: { $regex: keyword, $options: 'i' } },
+          { author: { $regex: keyword, $options: 'i' } },
+          { description: { $regex: keyword, $options: 'i' } }
+        );
+      });
+      
+      // Tìm kiếm sách chứa bất kỳ từ khóa nào
+      query.$or = searchConditions;
     }
     
     // Lọc theo đánh giá
@@ -418,10 +431,30 @@ router.get('/favorites', protect, async (req, res) => {
 });
 
 // Trang lịch sử đọc (yêu cầu đăng nhập)
-router.get('/reading-history', protect, (req, res) => {
-  res.render('reading-history', {
-    title: 'Lịch sử đọc'
-  });
+router.get('/reading-history', protect, async (req, res) => {
+  try {
+    // Lấy thông tin người dùng và populate lịch sử đọc
+    const user = await User.findById(req.user._id)
+      .populate({
+        path: 'readingHistory.book',
+        select: 'title author cover'
+      })
+      .populate({
+        path: 'readingHistory.chapter',
+        select: 'title order'
+      });
+    
+    res.render('reading-history', {
+      title: 'Lịch sử đọc',
+      user: user
+    });
+  } catch (error) {
+    console.error('Lỗi khi tải trang lịch sử đọc:', error);
+    res.status(500).render('error', {
+      title: 'Lỗi Hệ Thống',
+      message: 'Đã xảy ra lỗi khi tải trang lịch sử đọc. Vui lòng thử lại sau.'
+    });
+  }
 });
 
 module.exports = router; 

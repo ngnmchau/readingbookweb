@@ -33,8 +33,8 @@
       </ul>
       <form class="search-form" onsubmit="submitSearch(event)">
         <div class="search-container position-relative d-flex align-items-center">
-          <input type="text" class="search-input form-control" placeholder="Tìm kiếm sách..." oninput="toggleClearButton()" />
-          <button class="clear-btn btn" onclick="clearSearch()" style="display: none;">
+          <input type="text" class="search-input form-control" placeholder="Tìm kiếm sách..." oninput="toggleClearButton()" value="<%= locals.filters && locals.filters.search ? locals.filters.search : '' %>" />
+          <button class="clear-btn btn" onclick="clearSearch(event)" style="display: none;" type="button">
             <i class="fas fa-times"></i>
           </button>
           <button class="search-btn btn" type="submit">
@@ -119,7 +119,7 @@
     border: none;
     cursor: pointer;
     position: absolute;
-    right: 10px; /* Đặt nút xóa vào vị trí bên phải của thanh tìm kiếm */
+    right: 60px; /* Điều chỉnh vị trí nút xóa để không bị chồng lấp với nút tìm kiếm */
     z-index: 2;
   }
 
@@ -133,14 +133,20 @@
     const searchInput = document.querySelector('.search-input');
     const clearBtn = document.querySelector('.clear-btn');
     
-    if (searchInput.value.trim() !== '') {
-      clearBtn.style.display = 'inline-block';
-    } else {
-      clearBtn.style.display = 'none';
+    if (searchInput && clearBtn) {
+      if (searchInput.value.trim() !== '') {
+        clearBtn.style.display = 'inline-block';
+      } else {
+        clearBtn.style.display = 'none';
+      }
     }
   }
 
-  function clearSearch() {
+  function clearSearch(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation(); // Ngăn event lan truyền lên form
+    }
     document.querySelector('.search-input').value = '';
     document.querySelector('.clear-btn').style.display = 'none';
   }
@@ -148,7 +154,11 @@
   function submitSearch(event) {
     event.preventDefault();
     const searchInput = document.querySelector('.search-input');
-    // Handle the search action here
-    console.log('Searching for:', searchInput.value);
+    const searchTerm = searchInput.value.trim();
+    
+    if (searchTerm) {
+      // Chuyển hướng đến trang thư viện với tham số tìm kiếm
+      window.location.href = `/library?search=${encodeURIComponent(searchTerm)}`;
+    }
   }
 </script>

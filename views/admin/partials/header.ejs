@@ -3,135 +3,9 @@
     <button class="sidebar-toggle d-md-none">
       <i class="fas fa-bars"></i>
     </button>
-    
-    <div class="header-search">
-      <form action="/admin/search" method="GET">
-        <div class="input-group">
-          <span class="input-group-text bg-white border-end-0">
-            <i class="fas fa-search text-muted"></i>
-          </span>
-          <input type="text" class="form-control border-start-0" placeholder="Tìm kiếm..." name="q">
-        </div>
-      </form>
-    </div>
   </div>
   
   <div class="header-right">
-    <div class="header-icons">
-      <!-- Notifications -->
-      <div class="dropdown">
-        <button class="btn btn-icon" type="button" id="notificationsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-          <i class="fas fa-bell"></i>
-          <span class="badge badge-counter">3</span>
-        </button>
-        <div class="dropdown-menu dropdown-menu-end notification-dropdown" aria-labelledby="notificationsDropdown">
-          <div class="dropdown-header d-flex align-items-center justify-content-between">
-            <h6 class="mb-0">Thông báo</h6>
-            <a href="#" class="text-muted text-decoration-none small">Đánh dấu đã đọc tất cả</a>
-          </div>
-          <div class="dropdown-body">
-            <a href="#" class="dropdown-item">
-              <div class="notification-item d-flex">
-                <div class="notification-icon bg-primary text-white">
-                  <i class="fas fa-user-plus"></i>
-                </div>
-                <div class="notification-content ms-3">
-                  <h6 class="notification-title">Người dùng mới đăng ký</h6>
-                  <p class="notification-text small text-muted mb-0">5 người dùng mới đã đăng ký</p>
-                  <span class="notification-time small">2 phút trước</span>
-                </div>
-              </div>
-            </a>
-            <a href="#" class="dropdown-item">
-              <div class="notification-item d-flex">
-                <div class="notification-icon bg-success text-white">
-                  <i class="fas fa-book"></i>
-                </div>
-                <div class="notification-content ms-3">
-                  <h6 class="notification-title">Sách mới được thêm vào</h6>
-                  <p class="notification-text small text-muted mb-0">3 cuốn sách mới đã được thêm vào</p>
-                  <span class="notification-time small">1 giờ trước</span>
-                </div>
-              </div>
-            </a>
-            <a href="#" class="dropdown-item">
-              <div class="notification-item d-flex">
-                <div class="notification-icon bg-warning text-white">
-                  <i class="fas fa-comment"></i>
-                </div>
-                <div class="notification-content ms-3">
-                  <h6 class="notification-title">Bình luận mới</h6>
-                  <p class="notification-text small text-muted mb-0">Có 15 bình luận mới chưa duyệt</p>
-                  <span class="notification-time small">3 giờ trước</span>
-                </div>
-              </div>
-            </a>
-          </div>
-          <div class="dropdown-footer">
-            <a href="/admin/notifications" class="text-center d-block">Xem tất cả thông báo</a>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Messages -->
-      <div class="dropdown">
-        <button class="btn btn-icon" type="button" id="messagesDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-          <i class="fas fa-envelope"></i>
-          <span class="badge badge-counter">7</span>
-        </button>
-        <div class="dropdown-menu dropdown-menu-end notification-dropdown" aria-labelledby="messagesDropdown">
-          <div class="dropdown-header d-flex align-items-center justify-content-between">
-            <h6 class="mb-0">Tin nhắn</h6>
-            <a href="#" class="text-muted text-decoration-none small">Đánh dấu đã đọc tất cả</a>
-          </div>
-          <div class="dropdown-body">
-            <a href="#" class="dropdown-item">
-              <div class="message-item d-flex">
-                <div class="user-img position-relative me-3">
-                  <img src="/images/default-avatar.png" alt="User">
-                  <span class="status online"></span>
-                </div>
-                <div class="message-content">
-                  <h6 class="message-title">Nguyễn Văn A</h6>
-                  <p class="message-text small text-muted mb-0">Cảm ơn bạn đã hỗ trợ!</p>
-                  <span class="message-time small">4 phút trước</span>
-                </div>
-              </div>
-            </a>
-            <a href="#" class="dropdown-item">
-              <div class="message-item d-flex">
-                <div class="user-img position-relative me-3">
-                  <img src="/images/default-avatar.png" alt="User">
-                  <span class="status offline"></span>
-                </div>
-                <div class="message-content">
-                  <h6 class="message-title">Trần Thị B</h6>
-                  <p class="message-text small text-muted mb-0">Tôi cần thêm thông tin về sách...</p>
-                  <span class="message-time small">1 giờ trước</span>
-                </div>
-              </div>
-            </a>
-            <a href="#" class="dropdown-item">
-              <div class="message-item d-flex">
-                <div class="user-img position-relative me-3">
-                  <img src="/images/default-avatar.png" alt="User">
-                  <span class="status online"></span>
-                </div>
-                <div class="message-content">
-                  <h6 class="message-title">Lê Văn C</h6>
-                  <p class="message-text small text-muted mb-0">Xin chào, tôi muốn hỏi về...</p>
-                  <span class="message-time small">3 giờ trước</span>
-                </div>
-              </div>
-            </a>
-          </div>
-          <div class="dropdown-footer">
-            <a href="/admin/messages" class="text-center d-block">Xem tất cả tin nhắn</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    
     <!-- User Profile Dropdown -->
     <div class="header-profile dropdown">
       <button class="dropdown-toggle d-flex align-items-center" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -155,10 +29,6 @@
             </div>
           </div>
         </li>
-        <li><hr class="dropdown-divider"></li>
-        <li><a class="dropdown-item" href="/admin/profile"><i class="fas fa-user me-2"></i> Hồ sơ của tôi</a></li>
-        <li><a class="dropdown-item" href="/admin/settings"><i class="fas fa-cog me-2"></i> Cài đặt</a></li>
-        <li><a class="dropdown-item" href="/admin/activity-log"><i class="fas fa-list me-2"></i> Nhật ký hoạt động</a></li>
         <li><hr class="dropdown-divider"></li>
         <li><a class="dropdown-item" href="/auth/logout"><i class="fas fa-sign-out-alt me-2"></i> Đăng xuất</a></li>
       </ul>

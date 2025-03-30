@@ -1,5 +1,6 @@
 <%- include('partials/head', { title }) %>
 <%- include('partials/navbar') %>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
 
 <div class="book-detail-page py-5">
@@ -19,7 +20,7 @@
                 </ol>
               </nav>
             </div>
-            
+           
             <div class="row g-0">
               <!-- Hình ảnh sách -->
               <div class="col-md-4 position-relative">
@@ -34,7 +35,7 @@
                       <div class="book-status coming">Sắp có</div>
                     <% } %>
                   </div>
-                  
+                 
                   <div class="book-rating mt-3 text-center">
                     <div class="stars d-inline-flex align-items-center">
                       <% for(let i = 1; i <= 5; i++) { %>
@@ -44,7 +45,7 @@
                     <span class="rating-value d-block fw-bold mt-1"><%= book.rating.toFixed(1) %>/5</span>
                     <span class="text-muted small">(<%= book.comments ? book.comments.length : 0 %> đánh giá)</span>
                   </div>
-                  
+                 
                   <div class="book-actions mt-4">
                     <% if (user) { %>
                       <button class="btn btn-primary btn-lg w-100 mb-3 rounded-pill shadow-sm add-favorite" data-book-id="<%= book._id %>">
@@ -63,17 +64,17 @@
                   </div>
                 </div>
               </div>
-              
+             
               <!-- Thông tin chi tiết -->
               <div class="col-md-8">
                 <div class="book-info p-4">
                   <h1 class="book-title display-6 fw-bold mb-2"><%= book.title %></h1>
-                  
+                 
                   <div class="author-info d-flex align-items-center mb-3">
                     <span class="me-2 text-muted">Tác giả:</span>
                     <span class="fw-medium text-primary"><%= book.author %></span>
                   </div>
-                  
+                 
                   <div class="book-metadata mb-4">
                     <div class="row row-cols-2 g-3">
                       <div class="col">
@@ -102,7 +103,7 @@
                       </div>
                     </div>
                   </div>
-                  
+                 
                   <div class="book-categories mb-4">
                     <h6 class="text-muted small text-uppercase mb-2">Thể loại:</h6>
                     <div>
@@ -113,12 +114,12 @@
                       <% }) %>
                     </div>
                   </div>
-                  
+                 
                   <div class="book-description mb-4">
                     <h5 class="section-title border-bottom pb-2 mb-3">Giới thiệu sách</h5>
                     <p class="text-muted"><%= book.description %></p>
                   </div>
-                  
+                 
                   <div class="social-share mt-4">
                     <h6 class="text-muted small text-uppercase mb-2">Chia sẻ:</h6>
                     <div class="d-flex">
@@ -138,7 +139,7 @@
             </div>
           </div>
         </div>
-      
+     
         <!-- Danh sách chương -->
         <div class="card shadow rounded-lg overflow-hidden border-0 mb-4 mt-4">
           <div class="card-header bg-white p-4 border-0">
@@ -151,10 +152,10 @@
             <% if (chapters && chapters.length > 0) { %>
               <div class="chapter-list-container">
                 <div class="list-group list-group-flush chapter-list">
-                  <% 
+                  <%
                   // Sắp xếp chương theo thứ tự tăng dần
                   const sortedChapters = [...chapters].sort((a, b) => a.order - b.order);
-                  sortedChapters.forEach((chapter, index) => { 
+                  sortedChapters.forEach((chapter, index) => {
                   %>
                     <a href="/reader/<%= chapter._id %>" class="list-group-item list-group-item-action border-0 py-3 px-4">
                       <div class="d-flex justify-content-between align-items-center">
@@ -188,7 +189,7 @@
             <% } %>
           </div>
         </div>
-        
+       
         <!-- Phần đánh giá và bình luận -->
         <div class="card shadow rounded-lg overflow-hidden border-0 mb-4">
           <div class="card-header bg-white p-4 border-0">
@@ -216,7 +217,11 @@
                       </div>
                       <div class="flex-grow-1 ms-3">
                         <div class="d-flex justify-content-between align-items-center mb-2">
-                          <h6 class="mb-0 fw-bold"><%= comment.user.name %></h6>
+                          <h6>
+                            <%= comment.user?.username || 'Ẩn danh' %>
+
+
+                          </h6>                                                  
                           <small class="text-muted"><%= new Date(comment.createdAt).toLocaleDateString('vi-VN') %></small>
                         </div>
                         <div class="stars mb-2">
@@ -242,7 +247,7 @@
           </div>
         </div>
       </div>
-      
+     
       <!-- Sidebar -->
       <div class="col-lg-4">
         <!-- Sách liên quan -->
@@ -283,7 +288,7 @@
             <% } %>
           </div>
         </div>
-        
+       
         <!-- Thống kê sách -->
         <div class="card shadow rounded-lg overflow-hidden border-0 mb-4">
           <div class="card-header bg-white p-4 border-0">
@@ -339,7 +344,7 @@
             </div>
           </div>
         </div>
-        
+       
         <!-- Báo cáo -->
         <div class="card shadow rounded-lg overflow-hidden border-0">
           <div class="card-body p-4">
@@ -363,6 +368,7 @@
     </div>
   </div>
 </div>
+
 
 <!-- Modal đánh giá -->
 <% if (user) { %>
@@ -398,23 +404,30 @@
     </div>
   </div>
 </div>
+
+
+<!-- Container cho toast (hiển thị thông báo) -->
+<div id="toast-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050;"></div>
+
+
 <% } %>
+
 
 <style>
   .book-detail-page {
     background-color: #f8f9fa;
   }
-  
+ 
   .book-cover {
     position: relative;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s;
   }
-  
+ 
   .book-cover:hover {
     transform: translateY(-5px);
   }
-  
+ 
   .book-status {
     position: absolute;
     top: 10px;
@@ -426,76 +439,76 @@
     color: #fff;
     z-index: 10;
   }
-  
+ 
   .book-status.completed {
     background-color: #28a745;
   }
-  
+ 
   .book-status.ongoing {
     background-color: #ffc107;
     color: #212529;
   }
-  
+ 
   .book-status.coming {
     background-color: #17a2b8;
   }
-  
+ 
   .book-title {
     color: #343a40;
     line-height: 1.2;
   }
-  
+ 
   .section-title {
     color: #343a40;
     font-weight: 600;
   }
-  
+ 
   .stars .fa-star {
     color: #ffc107;
     margin-right: 2px;
   }
-  
+ 
   .stars .far.fa-star {
     color: #e0e0e0;
   }
-  
+ 
   .rating-input .rating-star {
     cursor: pointer;
     margin-right: 10px;
     transition: all 0.2s;
   }
-  
+ 
   .rating-input .rating-star:hover {
     color: #ffc107;
     transform: scale(1.2);
   }
-  
+ 
   .chapter-list-container {
     max-height: 600px;
     overflow-y: auto;
   }
-  
+ 
   .chapter-list-container::-webkit-scrollbar {
     width: 8px;
   }
-  
+ 
   .chapter-list-container::-webkit-scrollbar-track {
     background: #f1f1f1;
   }
-  
+ 
   .chapter-list-container::-webkit-scrollbar-thumb {
     background: #ddd;
     border-radius: 10px;
   }
-  
+ 
   .chapter-list-container::-webkit-scrollbar-thumb:hover {
     background: #ccc;
   }
-  
+ 
   .chapter-list .list-group-item:hover {
     background-color: #f8f9fa;
   }
-  
+ 
   .stat-icon {
     width: 40px;
     height: 40px;
@@ -503,113 +516,197 @@
     align-items: center;
     justify-content: center;
   }
-  
+ 
   .empty-state {
     padding: 30px 0;
   }
+
 
   .related-book-item:hover {
     background-color: #f8f9fa;
   }
 </style>
 
+
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Xử lý đánh giá sao
+document.addEventListener('DOMContentLoaded', function() {
     const ratingStars = document.querySelectorAll('.rating-star');
     const ratingInput = document.getElementById('rating-value');
-    
+    const reviewForm = document.getElementById('reviewForm');
+    const reviewModal = new bootstrap.Modal(document.getElementById('reviewModal'));
+    const username = "<%= user.username %>";
+
+
     if (ratingStars.length > 0 && ratingInput) {
-      ratingStars.forEach(star => {
-        star.addEventListener('click', function() {
-          const rating = this.getAttribute('data-rating');
-          ratingInput.value = rating;
-          
-          // Cập nhật giao diện
-          ratingStars.forEach(s => {
-            const sRating = s.getAttribute('data-rating');
-            if (sRating <= rating) {
-              s.classList.remove('far');
-              s.classList.add('fas');
-            } else {
-              s.classList.remove('fas');
-              s.classList.add('far');
-            }
-          });
+        ratingStars.forEach(star => {
+            star.addEventListener('click', function() {
+                const rating = this.getAttribute('data-rating');
+                ratingInput.value = rating;
+
+
+                // Cập nhật giao diện sao
+                ratingStars.forEach(s => {
+                    const sRating = s.getAttribute('data-rating');
+                    if (sRating <= rating) {
+                        s.classList.remove('far', 'text-warning');
+                        s.classList.add('fas', 'text-warning');
+                    } else {
+                        s.classList.remove('fas', 'text-warning');
+                        s.classList.add('far');
+                    }
+                });
+            });
+
+
+            // Hiệu ứng khi hover
+            star.addEventListener('mouseover', function() {
+                const rating = this.getAttribute('data-rating');
+                ratingStars.forEach(s => {
+                    if (s.getAttribute('data-rating') <= rating) {
+                        s.classList.add('text-warning');
+                    }
+                });
+            });
+
+
+            star.addEventListener('mouseout', function() {
+                ratingStars.forEach(s => {
+                    if (!s.classList.contains('fas')) {
+                        s.classList.remove('text-warning');
+                    }
+                });
+            });
         });
-        
-        // Animation khi hover
-        star.addEventListener('mouseover', function() {
-          const rating = this.getAttribute('data-rating');
-          
-          ratingStars.forEach(s => {
-            const sRating = s.getAttribute('data-rating');
-            if (sRating <= rating) {
-              s.classList.add('text-warning');
-            }
-          });
-        });
-        
-        star.addEventListener('mouseout', function() {
-          ratingStars.forEach(s => {
-            if (s.classList.contains('fas') === false) {
-              s.classList.remove('text-warning');
-            }
-          });
-        });
-      });
     }
-    
+
+
+    // Xử lý gửi form đánh giá
+    if (reviewForm) {
+        reviewForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+
+            const rating = document.getElementById('rating-value').value;
+            const content = document.getElementById('review-content').value;
+            const usernameElement = document.getElementById('username');
+            const username = usernameElement ? usernameElement.textContent.trim() : 'Ẩn danh';
+
+
+
+
+            if (!rating) {
+            showToast('danger', 'Vui lòng chọn số sao đánh giá!');
+            return;
+            }
+
+
+            const formData = JSON.stringify({ rating, content: content.trim(), username });
+
+
+            fetch(reviewForm.action, {
+                method: 'POST',
+                headers: { "Content-Type": "application/json" },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('success', 'Đánh giá của bạn đã được gửi thành công!');
+                    // Ẩn modal
+                    reviewModal.hide();
+                   
+                    // Reset form
+                    reviewForm.reset();
+                    ratingInput.value = "0";
+                    ratingStars.forEach(star => {
+                        star.classList.remove('fas', 'text-warning');
+                        star.classList.add('far');
+                    });
+
+
+                    // Load lại trang sau 1s
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                } else {
+                    showToast('danger', 'Có lỗi xảy ra, vui lòng thử lại!');
+                }
+            })
+            .catch(() => {
+                showToast('danger', 'Lỗi kết nối! Vui lòng thử lại.');
+            });
+        });
+    }
+
+
     // Xử lý thêm vào sách yêu thích
     const addFavoriteBtn = document.querySelector('.add-favorite');
     if (addFavoriteBtn) {
-      addFavoriteBtn.addEventListener('click', function() {
-        const bookId = this.getAttribute('data-book-id');
-        
-        fetch(`/api/books/${bookId}/favorites`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            this.innerHTML = '<i class="fas fa-check me-2"></i> Đã thêm vào sách yêu thích';
-            this.classList.remove('btn-primary');
-            this.classList.add('btn-success');
-            this.disabled = true;
-            
-            // Hiển thị thông báo
-            const toast = document.createElement('div');
-            toast.className = 'position-fixed bottom-0 end-0 p-3';
-            toast.style.zIndex = '5';
-            toast.innerHTML = `
-              <div class="toast align-items-center text-white bg-success border-0 shadow" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="d-flex">
-                  <div class="toast-body">
-                    <i class="fas fa-check-circle me-2"></i> Đã thêm vào danh sách yêu thích thành công!
-                  </div>
-                  <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-              </div>
-            `;
-            document.body.appendChild(toast);
-            const toastEl = new bootstrap.Toast(toast.querySelector('.toast'));
-            toastEl.show();
-            
-            setTimeout(() => {
-              toast.remove();
-            }, 3000);
-          }
-        })
-        .catch(err => {
-          console.error('Lỗi:', err);
-          alert('Có lỗi xảy ra khi thêm vào sách yêu thích!');
+        addFavoriteBtn.addEventListener('click', function() {
+            const bookId = this.getAttribute('data-book-id');
+
+
+            fetch(`/api/books/${bookId}/favorites`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    this.innerHTML = '<i class="fas fa-check me-2"></i> Đã thêm vào sách yêu thích';
+                    this.classList.remove('btn-primary');
+                    this.classList.add('btn-success');
+                    this.disabled = true;
+
+
+                    showToast('success', 'Đã thêm vào danh sách yêu thích thành công!');
+                }
+            })
+            .catch(err => {
+                console.error('Lỗi:', err);
+                showToast('danger', 'Có lỗi xảy ra khi thêm vào sách yêu thích!');
+            });
         });
-      });
     }
-  });
+});
+
+
+// Hàm hiển thị Toast
+function showToast(type, message) {
+    let toastContainer = document.getElementById('toast-container');
+   
+    if (!toastContainer) {
+        toastContainer = document.createElement('div');
+        toastContainer.id = 'toast-container';
+        toastContainer.className = 'position-fixed bottom-0 end-0 p-3';
+        toastContainer.style.zIndex = '1050';
+        document.body.appendChild(toastContainer);
+    }
+
+
+    const toast = document.createElement('div');
+    toast.className = `toast align-items-center text-bg-${type} border-0 show`;
+    toast.setAttribute('role', 'alert');
+    toast.innerHTML = `
+        <div class="d-flex">
+            <div class="toast-body">${message}</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    `;
+    toastContainer.appendChild(toast);
+
+
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 500);
+    }, 3000);
+}
+
+
 </script>
 
-<%- include('partials/footer') %> 
+
+<%- include('partials/footer') %>
+

@@ -12,6 +12,48 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Route tìm kiếm bài viết
+router.get('/search', async (req, res) => {
+  try {
+    const query = req.query.query;
+    let posts = [];
+    
+    if (query) {
+      // Tách từ khóa tìm kiếm thành các từ riêng biệt
+      const keywords = query.split(/\s+/).filter(word => word.length > 0);
+      
+      // Tạo mảng điều kiện tìm kiếm cho từng từ khóa
+      const searchConditions = [];
+      
+      // Thêm điều kiện tìm kiếm cho từng từ khóa
+      keywords.forEach(keyword => {
+        searchConditions.push(
+          { title: { $regex: keyword, $options: 'i' } },
+          { content: { $regex: keyword, $options: 'i' } }
+        );
+      });
+      
+      // Tìm kiếm bài viết chứa bất kỳ từ khóa nào
+      posts = await BlogPost.find({
+        $or: searchConditions
+      }).sort({ createdAt: -1 });
+    }
+    
+    res.render('blog', { 
+      posts, 
+      searchQuery: query,
+      isSearchResult: true 
+    });
+  } catch (err) {
+    console.error('Lỗi khi tìm kiếm bài viết:', err);
+    res.status(500).render('error', {
+      title: 'Lỗi Hệ Thống',
+      message: 'Đã xảy ra lỗi khi tìm kiếm bài viết. Vui lòng thử lại sau.',
+      user: req.user
+    });
+  }
+});
+
 // Lấy bài viết theo ID
 router.get('/:id', async (req, res) => {
   try {

@@ -128,7 +128,7 @@
       font-weight: 600;
     }
     
-    .favorite-books, .reading-history {
+    .favorite-books {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 1.5rem;
@@ -291,38 +291,6 @@
                   <i class="fas fa-heart text-muted" style="font-size: 3rem;"></i>
                   <h3 class="mt-3">Chưa có sách yêu thích</h3>
                   <p class="text-muted">Khám phá và thêm sách vào danh sách yêu thích của bạn</p>
-                  <a href="/library" class="btn btn-primary mt-2">Khám phá thư viện</a>
-                </div>
-              <% } %>
-            </div>
-            
-            <!-- Tab Lịch sử đọc -->
-            <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
-              <% if (user.readingHistory && user.readingHistory.length > 0) { %>
-                <div class="reading-history">
-                  <% user.readingHistory.forEach(item => { %>
-                    <div class="book-card">
-                      <div class="book-cover">
-                        <img src="<%= item.book.cover %>" alt="<%= item.book.title %>">
-                      </div>
-                      <div class="book-info">
-                        <h3 class="book-title"><%= item.book.title %></h3>
-                        <div class="book-author"><%= item.book.author %></div>
-                        <div class="text-muted mb-2">
-                          <small>Đọc gần đây: <%= new Date(item.lastRead).toLocaleDateString('vi-VN') %></small>
-                        </div>
-                        <div class="d-grid">
-                          <a href="/reader/<%= item.currentChapter %>" class="btn btn-sm btn-primary">Tiếp tục đọc</a>
-                        </div>
-                      </div>
-                    </div>
-                  <% }) %>
-                </div>
-              <% } else { %>
-                <div class="text-center py-5">
-                  <i class="fas fa-book-open text-muted" style="font-size: 3rem;"></i>
-                  <h3 class="mt-3">Chưa có lịch sử đọc</h3>
-                  <p class="text-muted">Bắt đầu đọc sách để ghi lại lịch sử đọc của bạn</p>
                   <a href="/library" class="btn btn-primary mt-2">Khám phá thư viện</a>
                 </div>
               <% } %>
