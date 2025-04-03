@@ -50,7 +50,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 const authRoutes = require('./routes/auth');
 const bookRoutes = require('./routes/bookRoutes');
 const indexRoutes = require('./routes/index');
-const adminRoutes = require('./routes/admin'); // Make sure this path is correct
+const adminRoutes = require('./routes/admin'); 
 const blogRoutes = require('./routes/blog');
 
 

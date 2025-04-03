@@ -7,7 +7,7 @@ const path = require('path');
  */
 exports.index = async (req, res) => {
   try {
-    // Xây dựng query cơ bản, không sử dụng bộ lọc người dùng
+    // Xây dựng query cơ bản
     const query = {};
     
     // Fetch tất cả người dùng từ database
@@ -31,7 +31,7 @@ exports.index = async (req, res) => {
   }
 };
 
-exports.addForm = (req, res) => {
+exports.addForm = (req, res) => { // hiển thị form thêm người dùng
   try {
     res.render('admin/users/add', {
       title: 'Thêm người dùng',
@@ -47,7 +47,7 @@ exports.addForm = (req, res) => {
   }
 };
 
-exports.create = async (req, res) => {
+exports.create = async (req, res) => { // tạo người dùng mới
   try {
     // Xử lý dữ liệu từ form
     const { name, email, password, confirmPassword, role } = req.body;
@@ -96,7 +96,7 @@ exports.create = async (req, res) => {
   }
 };
 
-exports.view = async (req, res) => {
+exports.view = async (req, res) => { // hiển thị chi tiết người dùng
   try {
     const user = await User.findById(req.params.id);
     
@@ -123,7 +123,7 @@ exports.view = async (req, res) => {
   }
 };
 
-exports.editForm = async (req, res) => {
+exports.editForm = async (req, res) => { // hiển thị form chỉnh sửa người dùng
   try {
     const editUser = await User.findById(req.params.id);
     
@@ -150,7 +150,7 @@ exports.editForm = async (req, res) => {
   }
 };
 
-exports.update = async (req, res) => {
+exports.update = async (req, res) => { // cập nhật người dùng
   try {
     const { name, email, password, confirmPassword, role } = req.body;
     
@@ -209,7 +209,7 @@ exports.update = async (req, res) => {
 /**
  * Xóa người dùng khỏi hệ thống
  */
-exports.delete = async (req, res) => {
+exports.delete = async (req, res) => { // xóa người dùng  
   try {
     // Tìm người dùng trước khi xóa để lấy thông tin về file ảnh
     const user = await User.findById(req.params.id);
@@ -266,4 +266,3 @@ exports.delete = async (req, res) => {
   }
 };
 
-// Implement other controller methods for users...

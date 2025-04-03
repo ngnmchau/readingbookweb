@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
   initDeleteConfirmation();
   
   // Xử lý tìm kiếm nhanh
-  handleQuickSearch();
+  //handleQuickSearch();
 });
 
 /**
@@ -143,42 +143,42 @@ function handleAlerts() {
   }
 }
 
-/**
- * Xử lý tìm kiếm nhanh cho DataTable
- */
-function handleQuickSearch() {
-  // Xử lý tìm kiếm nhanh cho bảng users
-  const usersQuickSearch = document.getElementById('quickSearch');
-  const usersTable = document.getElementById('usersTable');
+// /**
+//  * Xử lý tìm kiếm nhanh cho DataTable
+//  */
+// function handleQuickSearch() {
+//   // Xử lý tìm kiếm nhanh cho bảng users
+//   const usersQuickSearch = document.getElementById('quickSearch');
+//   const usersTable = document.getElementById('usersTable');
   
-  if (usersQuickSearch && usersTable) {
-    usersQuickSearch.addEventListener('keyup', function() {
-      const usersDataTable = $(usersTable).DataTable();
-      usersDataTable.search(this.value).draw();
-    });
+//   if (usersQuickSearch && usersTable) {
+//     usersQuickSearch.addEventListener('keyup', function() {
+//       const usersDataTable = $(usersTable).DataTable();
+//       usersDataTable.search(this.value).draw();
+//     });
     
-    document.getElementById('btnQuickSearch')?.addEventListener('click', function() {
-      const usersDataTable = $(usersTable).DataTable();
-      usersDataTable.search(usersQuickSearch.value).draw();
-    });
-  }
+//     document.getElementById('btnQuickSearch')?.addEventListener('click', function() {
+//       const usersDataTable = $(usersTable).DataTable();
+//       usersDataTable.search(usersQuickSearch.value).draw();
+//     });
+//   }
   
-  // Xử lý tìm kiếm nhanh cho bảng books
-  const booksQuickSearch = document.getElementById('quickSearch');
-  const booksTable = document.getElementById('booksTable');
+//   // Xử lý tìm kiếm nhanh cho bảng books
+//   const booksQuickSearch = document.getElementById('quickSearch');
+//   const booksTable = document.getElementById('booksTable');
   
-  if (booksQuickSearch && booksTable) {
-    booksQuickSearch.addEventListener('keyup', function() {
-      const booksDataTable = $(booksTable).DataTable();
-      booksDataTable.search(this.value).draw();
-    });
+//   if (booksQuickSearch && booksTable) {
+//     booksQuickSearch.addEventListener('keyup', function() {
+//       const booksDataTable = $(booksTable).DataTable();
+//       booksDataTable.search(this.value).draw();
+//     });
     
-    document.getElementById('btnQuickSearch')?.addEventListener('click', function() {
-      const booksDataTable = $(booksTable).DataTable();
-      booksDataTable.search(booksQuickSearch.value).draw();
-    });
-  }
-}
+//     document.getElementById('btnQuickSearch')?.addEventListener('click', function() {
+//       const booksDataTable = $(booksTable).DataTable();
+//       booksDataTable.search(booksQuickSearch.value).draw();
+//     });
+//   }
+// }
 
 // Xử lý xác nhận xóa
 function confirmDelete(url, title = 'Bạn có chắc chắn muốn xóa?', text = 'Hành động này không thể hoàn tác!') {
@@ -201,6 +201,12 @@ function confirmDelete(url, title = 'Bạn có chắc chắn muốn xóa?', text
 // Khởi tạo DataTable cho bảng users và books
 function initDataTables() {
   if (document.getElementById('usersTable')) {
+    // Kiểm tra và hủy DataTable nếu đã tồn tại
+    if ($.fn.DataTable.isDataTable('#usersTable')) {
+      $('#usersTable').DataTable().destroy();
+    }
+    
+    // Khởi tạo DataTable mới
     $('#usersTable').DataTable({
       language: {
         url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/vi.json'
@@ -209,6 +215,12 @@ function initDataTables() {
   }
   
   if (document.getElementById('booksTable')) {
+    // Kiểm tra và hủy DataTable nếu đã tồn tại
+    if ($.fn.DataTable.isDataTable('#booksTable')) {
+      $('#booksTable').DataTable().destroy();
+    }
+    
+    // Khởi tạo DataTable mới
     $('#booksTable').DataTable({
       language: {
         url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/vi.json'

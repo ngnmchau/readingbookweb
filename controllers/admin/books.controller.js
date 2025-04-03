@@ -8,7 +8,7 @@ const path = require('path');
  */
 exports.index = async (req, res) => {
   try {
-    // Xây dựng query cơ bản, không sử dụng bộ lọc nâng cao
+    // Xây dựng query cơ bản
     const query = {};
     
     // Fetch tất cả sách từ database
@@ -45,7 +45,7 @@ exports.index = async (req, res) => {
   }
 };
 
-exports.addForm = (req, res) => {
+exports.addForm = (req, res) => { // hiển thị form thêm sách
   try {
     res.render('admin/books/add', {
       title: 'Thêm sách mới',
@@ -61,7 +61,7 @@ exports.addForm = (req, res) => {
   }
 };
 
-exports.create = async (req, res) => {
+exports.create = async (req, res) => { // tạo sách mới
   try {
     // Xử lý dữ liệu từ form
     const { title, author, description, pages, language, categories, publishDate } = req.body;
@@ -94,7 +94,7 @@ exports.create = async (req, res) => {
   }
 };
 
-exports.view = async (req, res) => {
+exports.view = async (req, res) => { // hiển thị chi tiết sách
   try {
     const book = await Book.findById(req.params.id);
     
@@ -121,7 +121,7 @@ exports.view = async (req, res) => {
   }
 };
 
-exports.editForm = async (req, res) => {
+exports.editForm = async (req, res) => { // hiển thị form chỉnh sửa sách
   try {
     const book = await Book.findById(req.params.id);
     
@@ -148,7 +148,7 @@ exports.editForm = async (req, res) => {
   }
 };
 
-exports.update = async (req, res) => {
+exports.update = async (req, res) => { // cập nhật sách
   try {
     const { title, author, description, pages, language, categories, publishDate } = req.body;
     
@@ -207,7 +207,7 @@ exports.update = async (req, res) => {
 /**
  * Xóa sách khỏi hệ thống
  */
-exports.delete = async (req, res) => {
+exports.delete = async (req, res) => { // xóa sách  
   try {
     // Tìm sách trước khi xóa để lấy thông tin về file ảnh
     const book = await Book.findById(req.params.id);
