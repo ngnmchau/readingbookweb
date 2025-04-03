@@ -106,10 +106,15 @@ exports.view = async (req, res) => { // hiển thị chi tiết sách
       });
     }
     
+    // Lấy danh sách chương của sách
+    const Chapter = require('../../models/Chapter');
+    const chapters = await Chapter.find({ bookId: book._id }).sort({ order: 1 });
+    
     res.render('admin/books/view', {
       title: 'Chi tiết sách',
       user: req.user,
-      book: book
+      book: book,
+      chapters: chapters
     });
   } catch (err) {
     console.error('Lỗi khi xem chi tiết sách:', err);

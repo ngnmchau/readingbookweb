@@ -41,9 +41,6 @@
                 <% } %>
                 <span class="ms-1"><%= book.rating %>/5</span>
               </div>
-              <a href="/book/<%= book._id %>" target="_blank" class="btn btn-outline-primary">
-                <i class="fas fa-external-link-alt me-1"></i> Xem trên trang người dùng
-              </a>
             </div>
             
             <div class="mb-3">
@@ -92,11 +89,6 @@
               <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="tab" href="#chapters" role="tab">
                   <i class="fas fa-list-ul me-1"></i> Danh sách chương
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="tab" href="#readers" role="tab">
-                  <i class="fas fa-users me-1"></i> Độc giả
                 </a>
               </li>
             </ul>
@@ -160,53 +152,6 @@
                     <a href="/admin/chapters/add?book=<%= book._id %>" class="btn btn-primary mt-2">
                       <i class="fas fa-plus-circle me-1"></i> Thêm chương đầu tiên
                     </a>
-                  </div>
-                <% } %>
-              </div>
-              
-              <!-- Tab độc giả -->
-              <div class="tab-pane" id="readers" role="tabpanel">
-                <h5 class="mb-3">Độc giả yêu thích sách này</h5>
-                
-                <% if (typeof readers !== 'undefined' && readers.length > 0) { %>
-                  <div class="table-responsive">
-                    <table class="table table-hover">
-                      <thead>
-                        <tr>
-                          <th>Người dùng</th>
-                          <th>Email</th>
-                          <th>Ngày thích</th>
-                          <th style="width: 80px">Thao tác</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <% readers.forEach(reader => { %>
-                          <tr>
-                            <td>
-                              <div class="d-flex align-items-center">
-                                <img src="<%= reader.avatar || '/uploads/users/default-avatar.jpg' %>" 
-                                     class="rounded-circle me-2" 
-                                     style="width: 35px; height: 35px; object-fit: cover;">
-                                <%= reader.name %>
-                              </div>
-                            </td>
-                            <td><%= reader.email %></td>
-                            <td><%= new Date(reader.favoriteDate).toLocaleDateString('vi-VN') %></td>
-                            <td>
-                              <a href="/admin/users/<%= reader._id %>/view" class="btn btn-sm btn-primary" 
-                                data-bs-toggle="tooltip" title="Xem chi tiết">
-                                <i class="fas fa-eye"></i>
-                              </a>
-                            </td>
-                          </tr>
-                        <% }); %>
-                      </tbody>
-                    </table>
-                  </div>
-                <% } else { %>
-                  <div class="text-center py-4">
-                    <i class="fas fa-heart text-muted mb-3" style="font-size: 2rem;"></i>
-                    <p class="text-muted">Chưa có độc giả nào yêu thích sách này</p>
                   </div>
                 <% } %>
               </div>
