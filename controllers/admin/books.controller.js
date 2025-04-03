@@ -73,10 +73,10 @@ exports.create = async (req, res) => {
       description,
       pages: parseInt(pages) || 0,
       language,
-      categories: categories ? categories.split(',').map(cat => cat.trim()) : [],
+      categories: Array.isArray(categories) ? categories : (categories ? categories.split(',').map(cat => cat.trim()) : []),
       publishDate: new Date(publishDate) || new Date(),
       cover: req.file ? `/uploads/${req.file.filename}` : '/images/default-book-cover.jpg',
-      rating: 0,
+      rating: 5,
       views: 0
     });
     
@@ -150,7 +150,17 @@ exports.editForm = async (req, res) => {
 
 exports.update = async (req, res) => {
   try {
-    const { title, author, description, pages, language, categories, publishDate, rating, views } = req.body;
+    const { title, author, description, pages, language, categories, publishDate } = req.body;
+    
+    // Tìm sách để lấy giá trị rating và views hiện tại
+    const existingBook = await Book.findById(req.params.id);
+    if (!existingBook) {
+      return res.status(404).render('error', {
+        title: 'Không Tìm Thấy',
+        message: 'Không tìm thấy sách',
+        user: req.user
+      });
+    }
     
     const updateData = {
       title,
@@ -158,10 +168,10 @@ exports.update = async (req, res) => {
       description,
       pages: parseInt(pages) || 0,
       language,
-      categories: categories ? categories.split(',').map(cat => cat.trim()) : [],
+      categories: Array.isArray(categories) ? categories : (categories ? categories.split(',').map(cat => cat.trim()) : []),
       publishDate: new Date(publishDate) || new Date(),
-      rating: parseFloat(rating) || 0,
-      views: parseInt(views) || 0
+      rating: existingBook.rating, // Giữ nguyên giá trị rating hiện tại
+      views: existingBook.views    // Giữ nguyên giá trị views hiện tại
     };
     
     // Nếu có file ảnh mới

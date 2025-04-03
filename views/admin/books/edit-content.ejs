@@ -103,21 +103,6 @@
                     <input type="date" class="form-control" id="publishDate" name="publishDate"
                       value="<%= new Date(book.publishDate).toISOString().split('T')[0] %>">
                   </div>
-                  
-                  <div class="row">
-                    <div class="col-md-6 mb-3">
-                      <label for="rating" class="form-label">Đánh giá</label>
-                      <input type="number" class="form-control" id="rating" name="rating" step="0.1" min="0" max="5"
-                        value="<%= book.rating %>">
-                      <small class="text-muted">Thang điểm từ 0 đến 5</small>
-                    </div>
-                    
-                    <div class="col-md-6 mb-3">
-                      <label for="views" class="form-label">Lượt xem</label>
-                      <input type="number" class="form-control" id="views" name="views" min="0"
-                        value="<%= book.views %>">
-                    </div>
-                  </div>
                 </div>
                 
                 <div class="col-md-4">

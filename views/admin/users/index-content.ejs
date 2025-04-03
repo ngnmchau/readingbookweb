@@ -49,18 +49,6 @@
       </div>
     </div>
 
-    <!-- Tìm kiếm nhanh và công cụ -->
-    <div class="row mb-4">
-      <div class="col-md-12">
-        <div class="input-group">
-          <input type="text" class="form-control" id="quickSearch" placeholder="Tìm kiếm nhanh..." aria-label="Tìm kiếm nhanh">
-          <button class="btn btn-outline-secondary" type="button" id="btnQuickSearch">
-            <i class="fas fa-search"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-
     <!-- Card danh sách người dùng -->
     <div class="row">
       <div class="col-12">
@@ -172,13 +160,15 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Khởi tạo DataTable
+  // Khởi tạo DataTable với tắt xác nhận xóa tự động
   if (document.getElementById('usersTable')) {
     $('#usersTable').DataTable({
       language: {
         url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/vi.json'
       },
-      pageLength: 10
+      pageLength: 10,
+      // Tắt các nút xác nhận mặc định
+      dom: 'frtip'
     });
   }
   
@@ -191,28 +181,6 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('btnConfirmDelete').href = `/admin/users/${userId}/delete`;
       deleteModal.show();
     });
-  });
-  
-  // Xử lý tìm kiếm nhanh
-  document.getElementById('btnQuickSearch').addEventListener('click', function() {
-    const table = $('#usersTable').DataTable();
-    table.search(document.getElementById('quickSearch').value).draw();
-  });
-  
-  // Xử lý phím Enter trong ô tìm kiếm nhanh
-  document.getElementById('quickSearch').addEventListener('keyup', function(e) {
-    if (e.key === 'Enter') {
-      document.getElementById('btnQuickSearch').click();
-    } else {
-      const table = $('#usersTable').DataTable();
-      table.search(this.value).draw();
-    }
-  });
-  
-  // Khởi tạo tooltip
-  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-    return new bootstrap.Tooltip(tooltipTriggerEl)
   });
 });
 </script> 

@@ -61,10 +61,6 @@ router.get('/', async (req, res) => {
     
     console.log(`Số liệu thống kê: ${userCount} người dùng, ${bookCount} sách, ${categoryCount} thể loại`);
     
-    // Đối với thống kê lượt đọc và bình luận, cần có model tương ứng
-    const viewCount = 0; // Thay bằng truy vấn thực khi có model
-    const commentCount = 0; // Thay bằng truy vấn thực khi có model
-    
     // Lấy sách mới nhất để hiển thị
     const recentBooks = await Book.find().sort({ createdAt: -1 }).limit(5);
     
@@ -72,9 +68,7 @@ router.get('/', async (req, res) => {
       stats: {
         userCount,
         bookCount,
-        categoryCount,
-        viewCount,
-        commentCount
+        categoryCount
       },
       recentBooks: recentBooks || []
     });

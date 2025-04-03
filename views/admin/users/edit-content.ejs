@@ -22,14 +22,14 @@
             <h5 class="card-title mb-0">Thông tin người dùng</h5>
           </div>
           <div class="card-body">
-            <form action="/admin/users/<%= user._id %>" method="POST" enctype="multipart/form-data">
+            <form action="/admin/users/<%= editUser._id %>" method="POST" enctype="multipart/form-data">
               <input type="hidden" name="_method" value="PUT">
               <div class="row">
                 <div class="col-md-8">
                   <div class="mb-3">
                     <label for="name" class="form-label">Họ tên <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="name" name="name" required
-                      value="<%= user.name %>">
+                      value="<%= editUser.name %>">
                     <% if (typeof errors !== 'undefined' && errors.name) { %>
                       <div class="text-danger"><%= errors.name %></div>
                     <% } %>
@@ -38,7 +38,7 @@
                   <div class="mb-3">
                     <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
                     <input type="email" class="form-control" id="email" name="email" required
-                      value="<%= user.email %>">
+                      value="<%= editUser.email %>">
                     <% if (typeof errors !== 'undefined' && errors.email) { %>
                       <div class="text-danger"><%= errors.email %></div>
                     <% } %>
@@ -64,8 +64,8 @@
                   <div class="mb-3">
                     <label for="role" class="form-label">Vai trò</label>
                     <select class="form-select" id="role" name="role">
-                      <option value="user" <%= user.role === 'user' ? 'selected' : '' %>>Người dùng</option>
-                      <option value="admin" <%= user.role === 'admin' ? 'selected' : '' %>>Quản trị viên</option>
+                      <option value="user" <%= editUser.role === 'user' ? 'selected' : '' %>>Người dùng</option>
+                      <option value="admin" <%= editUser.role === 'admin' ? 'selected' : '' %>>Quản trị viên</option>
                     </select>
                   </div>
                 </div>
@@ -74,7 +74,7 @@
                   <div class="mb-3">
                     <label for="avatar" class="form-label">Ảnh đại diện</label>
                     <div class="text-center mb-3">
-                      <img id="avatar-preview" src="<%= user.avatar || '/uploads/users/default-avatar.jpg' %>" 
+                      <img id="avatar-preview" src="<%= editUser.avatar || '/uploads/users/default-avatar.jpg' %>" 
                            class="img-thumbnail rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
                     </div>
                     <input type="file" class="form-control custom-file-input" id="avatar" name="avatar" accept="image/*"
